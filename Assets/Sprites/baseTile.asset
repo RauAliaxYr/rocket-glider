@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: baseTile
   m_EditorClassIdentifier: 
   m_AnimatedSprites:
-  - {fileID: 1873917168148291061, guid: c414d877f330d5a49bb4078d84e09ea9, type: 3}
+  - {fileID: 9478795197586167, guid: c414d877f330d5a49bb4078d84e09ea9, type: 3}
   m_MinSpeed: 1
   m_MaxSpeed: 1
   m_AnimationStartTime: 0
   m_AnimationStartFrame: 0
-  m_TileColliderType: 0
+  m_TileColliderType: 2
   m_TileAnimationFlags: 0
