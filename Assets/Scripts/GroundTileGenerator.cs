@@ -45,7 +45,11 @@ public class GroundTileGenerator : MonoBehaviour
             generatedMinX = Mathf.Min(generatedMinX, x);
             generatedMaxX = Mathf.Max(generatedMaxX, x);
         }
+        //DeleteTileFromBeh(targetX);
+    }
 
+    void DeleteTileFromBeh(int targetX)
+    {
         // Удаление тайлов позади
         int cleanupToX = targetX - cleanupDistanceBehind;
 

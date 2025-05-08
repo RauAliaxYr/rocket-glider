@@ -11,6 +11,7 @@ public class RewardBannerUI : MonoBehaviour
     [SerializeField] private Button restartButton;
     [SerializeField] private float fadeDuration = 0.5f;
     [SerializeField] private float countDuration = 1f;
+    [SerializeField] private SlingshotLauncher plane;
 
     private void Awake()
     {
@@ -62,6 +63,24 @@ public class RewardBannerUI : MonoBehaviour
     private void RestartGame()
     {
         Time.timeScale = 1f; // Возвращаем время
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        StartCoroutine(ResetGameState());
+    }
+    private IEnumerator ResetGameState()
+    {
+        // Скрываем баннер
+        float elapsed = 0f;
+        float fadeDuration = 0.5f;
+        rewardText.text = "";
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            canvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
+            yield return null;
+        }
+
+        gameObject.SetActive(false);
+
+        // Сбрасываем самолёт
+        plane.ResetToStart();
     }
 }

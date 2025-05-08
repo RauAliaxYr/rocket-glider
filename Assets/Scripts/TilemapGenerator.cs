@@ -28,7 +28,7 @@ public class TilemapGenerator : MonoBehaviour
             lastGeneratedX++;
         }
 
-        CleanBehindTiles(Mathf.FloorToInt(followTarget.position.x) - keepBehindDistance);
+        //CleanBehindTiles(Mathf.FloorToInt(followTarget.position.x) - keepBehindDistance);
     }
 
     void CleanBehindTiles(int xLimit)
