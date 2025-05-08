@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 public class TilemapGenerator : MonoBehaviour
 {
     public Tilemap background;
-    public TileBase baseTile;
+    private TileBase baseTile;
 
     public Transform followTarget;
     public int groundHeight = -2;
@@ -47,6 +47,7 @@ public class TilemapGenerator : MonoBehaviour
 
     void GenerateColumn(int x)
     {
+        baseTile = LevelManager.Instance.CurrentLevel.backgroundTile;
         for (int y = groundHeight; y < groundHeight + heightRange; y++)
         {
             background.SetTile(new Vector3Int(x, y, 0), baseTile);

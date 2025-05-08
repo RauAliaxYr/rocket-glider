@@ -32,14 +32,7 @@ public class GroundTileGenerator : MonoBehaviour
         {
             if (!tilemap.HasTile(new Vector3Int(x, groundHeightY, 0)))
             {
-                // Верхний слой - трава
-                tilemap.SetTile(new Vector3Int(x, groundHeightY, 0), grassTile);
-
-                // Под травой - земля
-                for (int y = 1; y <= dirtDepth; y++)
-                {
-                    tilemap.SetTile(new Vector3Int(x, groundHeightY - y, 0), dirtTile);
-                }
+                GenerateColumn(x);
             }
 
             generatedMinX = Mathf.Min(generatedMinX, x);
@@ -64,5 +57,20 @@ public class GroundTileGenerator : MonoBehaviour
         }
 
         generatedMinX = cleanupToX; // Обновляем границу
+    }
+
+    void GenerateColumn(int x)
+    {
+        grassTile = LevelManager.Instance.CurrentLevel.topGroundTile;
+        dirtTile = LevelManager.Instance.CurrentLevel.groundFillTile;
+        
+        // Верхний слой - трава
+        tilemap.SetTile(new Vector3Int(x, groundHeightY, 0), grassTile);
+
+        // Под травой - земля
+        for (int y = 1; y <= dirtDepth; y++)
+        {
+            tilemap.SetTile(new Vector3Int(x, groundHeightY - y, 0), dirtTile);
+        }
     }
 }

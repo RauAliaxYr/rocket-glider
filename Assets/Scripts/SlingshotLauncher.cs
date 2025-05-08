@@ -144,5 +144,4 @@ public class SlingshotLauncher : MonoBehaviour
         rb.simulated = false; // Отключаем физику
         rewardBannerUI.Show(tracker.TakeCoindByTravel());
     }
-    
 }

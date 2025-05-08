@@ -8,9 +8,6 @@ public class FlightTracker : MonoBehaviour
 
     private Vector2 startPosition;
     
-    
-    
-
     void Start()
     {
         startPosition = transform.position;
