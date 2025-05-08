@@ -787,6 +787,7 @@ GameObject:
   - component: {fileID: 1131610921}
   - component: {fileID: 1131610920}
   - component: {fileID: 1131610922}
+  - component: {fileID: 1131610923}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -847,6 +848,20 @@ MonoBehaviour:
   groundHeightY: -3
   dirtDepth: 10
   cleanupDistanceBehind: 30
+--- !u!114 &1131610923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131610919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94e949e808f5b02478c2096052863e58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levels:
+  - {fileID: 11400000, guid: efd9eb48dbb26f144b09afaadafb00a7, type: 2}
 --- !u!1 &1204159074
 GameObject:
   m_ObjectHideFlags: 0

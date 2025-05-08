@@ -4,12 +4,15 @@ public class SlingshotLauncher : MonoBehaviour
 {
     [SerializeField] private RewardBannerUI rewardBannerUI;
     [SerializeField] private FlightTracker tracker;
+    
     [Header("Запуск")]
-    public float launchForceMultiplier = 10f;
+    [SerializeField] private float launchForceMultiplier = 10f;
 
     [Header("Полётные тапы")]
-    public int maxTaps = 3;
-    public float tapForce = 5f;
+    [SerializeField] private int maxTaps = 3;
+    [SerializeField] private float tapForce = 5f;
+    [SerializeField] private float targetSpeed = 5f;
+    [SerializeField] private float speedCorrectionForce = 1f;
 
     private Vector2 startPoint;
     private Vector2 endPoint;
@@ -33,6 +36,7 @@ public class SlingshotLauncher : MonoBehaviour
     {
         if (hasLaunched)
         {
+            MaintainTargetSpeed();
             RotateTowardsVelocity();
         }
         if (!hasLaunched)
@@ -79,7 +83,8 @@ public class SlingshotLauncher : MonoBehaviour
     {
         Vector2 direction = startPoint - endPoint;
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.AddForce(direction * launchForceMultiplier, ForceMode2D.Impulse);
+        Vector2 clampedDirection = Vector2.ClampMagnitude(direction, 3);
+        rb.AddForce(clampedDirection * launchForceMultiplier, ForceMode2D.Impulse);
         hasLaunched = true;
         tapsLeft = maxTaps;
         isDragging = false;
@@ -144,4 +149,14 @@ public class SlingshotLauncher : MonoBehaviour
         rb.simulated = false; // Отключаем физику
         rewardBannerUI.Show(tracker.TakeCoindByTravel());
     }
+    void MaintainTargetSpeed()
+    {
+        float currentSpeedX = rb.linearVelocity.x;
+        float speedDifference = targetSpeed - currentSpeedX;
+
+        // Плавное приближение к целевой скорости по X
+        Vector2 force = new Vector2(speedDifference * speedCorrectionForce, 0f);
+        rb.AddForce(force, ForceMode2D.Force);
+    }
+    
 }
