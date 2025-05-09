@@ -25,7 +25,7 @@ public class GroundTileGenerator : MonoBehaviour
     {
         int targetX = Mathf.FloorToInt(target.position.x);
         int generateToX = targetX + viewDistance;
-        int generateFromX = targetX - 1; // чуть левее, чтобы избежать пробелов
+        int generateFromX = targetX - 4; // чуть левее, чтобы избежать пробелов
 
         // Генерация вперёд
         for (int x = generateFromX; x <= generateToX; x++)

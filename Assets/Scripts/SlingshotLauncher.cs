@@ -5,14 +5,8 @@ public class SlingshotLauncher : MonoBehaviour
     [SerializeField] private RewardBannerUI rewardBannerUI;
     [SerializeField] private FlightTracker tracker;
     
-    [Header("Запуск")]
-    [SerializeField] private float launchForceMultiplier = 10f;
-
     [Header("Полётные тапы")]
-    [SerializeField] private int maxTaps = 3;
-    [SerializeField] private float tapForce = 5f;
-    [SerializeField] private float targetSpeed = 5f;
-    [SerializeField] private float speedCorrectionForce = 1f;
+    [SerializeField] private float speedCorrectionForce ;
 
     private Vector2 startPoint;
     private Vector2 endPoint;
@@ -84,9 +78,9 @@ public class SlingshotLauncher : MonoBehaviour
         Vector2 direction = startPoint - endPoint;
         rb.bodyType = RigidbodyType2D.Dynamic;
         Vector2 clampedDirection = Vector2.ClampMagnitude(direction, 3);
-        rb.AddForce(clampedDirection * launchForceMultiplier, ForceMode2D.Impulse);
+        rb.AddForce(clampedDirection * UpgradeManager.Instance.GetLaunchForce(), ForceMode2D.Impulse);
         hasLaunched = true;
-        tapsLeft = maxTaps;
+        tapsLeft = UpgradeManager.Instance.GetMaxTaps();
         isDragging = false;
     }
     void HandleInAirTap()
@@ -107,7 +101,7 @@ public class SlingshotLauncher : MonoBehaviour
     void TapImpulse()
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Обнуляем вертикальную скорость
-        rb.AddForce(Vector2.up * tapForce, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * UpgradeManager.Instance.GetTapImpulse(), ForceMode2D.Impulse);
         tapsLeft--;
     }
     void RotateTowardsVelocity()
@@ -152,7 +146,7 @@ public class SlingshotLauncher : MonoBehaviour
     void MaintainTargetSpeed()
     {
         float currentSpeedX = rb.linearVelocity.x;
-        float speedDifference = targetSpeed - currentSpeedX;
+        float speedDifference = UpgradeManager.Instance.GetTargetSpeed() - currentSpeedX;
 
         // Плавное приближение к целевой скорости по X
         Vector2 force = new Vector2(speedDifference * speedCorrectionForce, 0f);
