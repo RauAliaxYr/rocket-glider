@@ -7,7 +7,7 @@ public class FlightTracker : MonoBehaviour
     public int coinsEarned { get; private set; }
 
     private Vector2 startPosition;
-    private bool levelAdvanced = false;
+    private bool levelAdvanced ;
     private LevelManager levelManager;
     
     void Start()
@@ -33,7 +33,9 @@ public class FlightTracker : MonoBehaviour
 
     public int TakeCoindByTravel()
     {
-        return coinsEarned = Mathf.FloorToInt(distanceTravelled)/10;
+        coinsEarned = Mathf.FloorToInt(distanceTravelled) / 10;
+        CurrencyManager.Instance.AddCoins(coinsEarned);
+        return coinsEarned;
     }
     
 }
