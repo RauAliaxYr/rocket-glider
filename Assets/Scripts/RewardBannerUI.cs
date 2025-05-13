@@ -12,6 +12,7 @@ public class RewardBannerUI : MonoBehaviour
     [SerializeField] private float fadeDuration = 0.5f;
     [SerializeField] private float countDuration = 1f;
     [SerializeField] private SlingshotLauncher plane;
+    [SerializeField] private UpgradeUI upgradeUI;
 
     private void Awake()
     {
@@ -79,8 +80,7 @@ public class RewardBannerUI : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-
-        // Сбрасываем самолёт
-        plane.ResetToStart();
+        
+        upgradeUI.Show();
     }
 }
