@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CurrencyManager: MonoBehaviour
@@ -5,6 +6,8 @@ public class CurrencyManager: MonoBehaviour
     public static CurrencyManager Instance { get; private set; }
 
     public int Coins { get; private set; } = 0;
+    
+    public static event Action<int> OnCoinsChanged;
 
     private void Awake()
     {
@@ -19,16 +22,15 @@ public class CurrencyManager: MonoBehaviour
     public void AddCoins(int amount)
     {
         Coins += amount;
-        // TODO: Save coins if нужна персистентность
+        OnCoinsChanged?.Invoke(Coins);
     }
 
-    public bool TrySpendCoins(int cost)
+    public bool TrySpendCoins(int amount)
     {
-        if (Coins >= cost)
-        {
-            Coins -= cost;
-            return true;
-        }
-        return false;
+        if (Coins < amount) return false;
+
+        Coins -= amount;
+        OnCoinsChanged?.Invoke(Coins);
+        return true;
     }
 }
