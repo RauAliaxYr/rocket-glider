@@ -5,7 +5,7 @@ public class CurrencyManager: MonoBehaviour
 {
     public static CurrencyManager Instance { get; private set; }
 
-    public int Coins { get; private set; } = 0;
+    public int Coins { get;  set; } = 0;
     
     public static event Action<int> OnCoinsChanged;
 
@@ -15,6 +15,7 @@ public class CurrencyManager: MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            Load();
         }
         else Destroy(gameObject);
     }
@@ -23,6 +24,7 @@ public class CurrencyManager: MonoBehaviour
     {
         Coins += amount;
         OnCoinsChanged?.Invoke(Coins);
+        Save();
     }
 
     public bool TrySpendCoins(int amount)
@@ -33,4 +35,16 @@ public class CurrencyManager: MonoBehaviour
         OnCoinsChanged?.Invoke(Coins);
         return true;
     }
+    
+    private void Save()
+    {
+        PlayerPrefs.SetInt("Coins", Coins);
+        PlayerPrefs.Save();
+    }
+
+    private void Load()
+    {
+        Coins = PlayerPrefs.GetInt("Coins", 0);
+    }
+    
 }

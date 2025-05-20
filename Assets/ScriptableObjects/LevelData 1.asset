@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LevelData 1
   m_EditorClassIdentifier: 
   levelName: Level_02
-  requiredDistanceToPass: 30
+  requiredDistanceToPass: 40
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
   topGroundTile: {fileID: 11400000, guid: fd54a7885f7661446aff1afdfc04dd77, type: 2}
   groundFillTile: {fileID: 11400000, guid: fd54a7885f7661446aff1afdfc04dd77, type: 2}
