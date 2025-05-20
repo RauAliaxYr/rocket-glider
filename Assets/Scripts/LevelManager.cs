@@ -17,7 +17,7 @@ public class LevelManager : MonoBehaviour
     {
         if (Instance == null)
         {
-            ResetAllProgress();
+            //ResetAllProgress();
             Instance = this;
             DontDestroyOnLoad(gameObject);
             currentLevelIndex = PlayerPrefs.GetInt(LevelKey, 0);
