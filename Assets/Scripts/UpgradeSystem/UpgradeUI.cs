@@ -29,19 +29,21 @@ public class UpgradeUI : MonoBehaviour
         
     }
 
-    void CreateUpgradeItem(string name, UpgradeConfig config, int level, System.Action onUpgrade)
+    void CreateUpgradeItem(string name, UpgradeConfig config, int level, System.Action onUpgrade, int purchases, int maxPurchase)
     {
         var item = Instantiate(upgradeItemPrefab, upgradesParent);
         var ui = item.GetComponent<UpgradeItemUI>();
 
         int cost = config.GetCost(level);
         bool canUpgrade = CurrencyManager.Instance.Coins >= cost;
+        int innerProgress = purchases;
+        int progressMax = maxPurchase; 
 
         ui.Setup(name, level, cost, canUpgrade, () =>
         {
             onUpgrade?.Invoke();
             RefreshUI();
-        });
+        },innerProgress,progressMax);
     }
     public void Show()
     {
@@ -92,17 +94,19 @@ public class UpgradeUI : MonoBehaviour
 
     private void CreateUI()
     {
-        CreateUpgradeItem("Speed", UpgradeManager.Instance.speedConfig, 
-            UpgradeManager.Instance.playerUpgrades.speedLevel,
-            () => UpgradeManager.Instance.TryUpgradeSpeed());
+        UpgradeManager manager = UpgradeManager.Instance;
+        
+        CreateUpgradeItem("Speed", manager.speedConfig, 
+            manager.playerUpgrades.speedLevel,
+            () => manager.TryUpgradeSpeed(),manager.playerUpgrades.speedPurchases,manager.playerUpgrades.speedLevel+3);
 
-        CreateUpgradeItem("Launch", UpgradeManager.Instance.launchConfig, 
-            UpgradeManager.Instance.playerUpgrades.launchLevel,
-            () => UpgradeManager.Instance.TryUpgradeLaunchForce());
+        CreateUpgradeItem("Launch", manager.launchConfig, 
+            manager.playerUpgrades.launchLevel,
+            () => manager.TryUpgradeLaunchForce(),manager.playerUpgrades.launchPurchases,manager.playerUpgrades.launchLevel+3);
 
-        CreateUpgradeItem("Tap", UpgradeManager.Instance.tapConfig, 
-            UpgradeManager.Instance.playerUpgrades.tapLevel,
-            () => UpgradeManager.Instance.TryUpgradeTapForce());
+        CreateUpgradeItem("Tap", manager.tapConfig, 
+            manager.playerUpgrades.tapLevel,
+            () => manager.TryUpgradeTapForce(),manager.playerUpgrades.tapPurchases,manager.playerUpgrades.tapLevel+3);
         
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)upgradesParent);
