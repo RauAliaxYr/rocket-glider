@@ -9,6 +9,7 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private LevelData[] levels;
     private int currentLevelIndex = 0;
+    private const string LevelKey = "CurrentLevelIndex";
 
     public LevelData CurrentLevel => levels[currentLevelIndex];
 
@@ -16,8 +17,10 @@ public class LevelManager : MonoBehaviour
     {
         if (Instance == null)
         {
+            ResetAllProgress();
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            currentLevelIndex = PlayerPrefs.GetInt(LevelKey, 0);
         }
         else
         {
@@ -43,7 +46,12 @@ public class LevelManager : MonoBehaviour
         if (!IsLevelReadyToAdvance) return;
         currentLevelIndex++;
         IsLevelReadyToAdvance = false;
+        PlayerPrefs.SetInt(LevelKey, currentLevelIndex);
+        PlayerPrefs.Save();
         OnLevelAdvanced?.Invoke(); // Сигнал для других систем
     }
-    
+    public void ResetAllProgress()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 }

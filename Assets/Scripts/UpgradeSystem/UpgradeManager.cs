@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour
@@ -11,13 +12,14 @@ public class UpgradeManager : MonoBehaviour
 
     [Header("Player Upgrades")]
     public UpgradeData playerUpgrades = new();
-
+    
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            playerUpgrades.Load();
         }
         else Destroy(gameObject);
     }
@@ -32,6 +34,7 @@ public class UpgradeManager : MonoBehaviour
         int cost = speedConfig.GetCost(playerUpgrades.speedLevel);
         if (CurrencyManager.Instance.TrySpendCoins(cost))
         {
+            playerUpgrades.Save();
             return playerUpgrades.TryUpgrade(ref playerUpgrades.speedPurchases, ref playerUpgrades.speedLevel);
         }
         return false;
@@ -41,6 +44,7 @@ public class UpgradeManager : MonoBehaviour
         int cost = speedConfig.GetCost(playerUpgrades.launchLevel);
         if (CurrencyManager.Instance.TrySpendCoins(cost))
         {
+            playerUpgrades.Save();
             return playerUpgrades.TryUpgrade(ref playerUpgrades.launchPurchases, ref playerUpgrades.launchLevel);
         }
         return false;
@@ -50,8 +54,10 @@ public class UpgradeManager : MonoBehaviour
         int cost = speedConfig.GetCost(playerUpgrades.tapLevel);
         if (CurrencyManager.Instance.TrySpendCoins(cost))
         {
+            playerUpgrades.Save();
             return playerUpgrades.TryUpgrade(ref playerUpgrades.tapPurchases, ref playerUpgrades.tapLevel);
         }
         return false;
     }
+    
 }

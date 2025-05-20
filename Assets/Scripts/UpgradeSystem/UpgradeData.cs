@@ -25,4 +25,19 @@ public class UpgradeData
         }
         return false;
     }
+    public void Save()
+    {
+        PlayerPrefs.SetInt("SpeedLevel", speedLevel);
+        PlayerPrefs.SetInt("LaunchLevel", launchLevel);
+        PlayerPrefs.SetInt("TapLevel", tapLevel);
+        PlayerPrefs.Save();
+    }
+
+    public void Load()
+    {
+        speedLevel = PlayerPrefs.GetInt("SpeedLevel", 0);
+        launchLevel = PlayerPrefs.GetInt("LaunchLevel", 0);
+        tapLevel = PlayerPrefs.GetInt("TapLevel", 0);
+        
+    }
 }
