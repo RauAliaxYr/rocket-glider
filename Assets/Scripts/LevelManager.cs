@@ -1,8 +1,11 @@
+using System;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    public event Action OnLevelAdvanced;
     public static LevelManager Instance { get; private set; }
+    public bool IsLevelReadyToAdvance { get; private set; } = false;
 
     [SerializeField] private LevelData[] levels;
     private int currentLevelIndex = 0;
@@ -27,9 +30,7 @@ public class LevelManager : MonoBehaviour
         if (currentLevelIndex < levels.Length - 1 &&
             distanceTraveled >= CurrentLevel.requiredDistanceToPass)
         {
-            currentLevelIndex++;
-            Debug.Log($"Переключение на уровень: {CurrentLevel.levelName}");
-            // Можно запустить ивент для других систем, чтобы перегенерировали окружение
+            IsLevelReadyToAdvance = true; // Только флаг
         }
     }
 
@@ -37,4 +38,12 @@ public class LevelManager : MonoBehaviour
     {
         currentLevelIndex = 0;
     }
+    public void ConfirmAdvanceLevel()
+    {
+        if (!IsLevelReadyToAdvance) return;
+        currentLevelIndex++;
+        IsLevelReadyToAdvance = false;
+        OnLevelAdvanced?.Invoke(); // Сигнал для других систем
+    }
+    
 }

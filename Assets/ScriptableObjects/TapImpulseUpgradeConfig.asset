@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: 
   valuesPerLevel:
-  - 1
-  - 1.5
-  - 2
-  - 2.5
-  - 3
-  - 3.5
+  - 7
   - 4
-  - 4.5
   - 5
-  - 5.5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
   costPerLevel: 030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
