@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -82,9 +83,12 @@ public class UpgradeUI : MonoBehaviour
         }
 
         gameObject.SetActive(false);
+        plane.ResetToStart();// Сбрасываем самолёт
         
-        plane.ResetToStart();
-        // Сбрасываем самолёт
+        if (LevelManager.Instance.IsLevelReadyToAdvance)
+        {
+            LevelManager.Instance.ConfirmAdvanceLevel();
+        }
     }
 
     private void CreateUI()

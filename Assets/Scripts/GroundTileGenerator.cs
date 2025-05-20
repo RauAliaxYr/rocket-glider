@@ -14,16 +14,21 @@ public class GroundTileGenerator : MonoBehaviour
 
     private int generatedMinX;
     private int generatedMaxX;
+    private int targetX;
 
     void Start()
     {
         generatedMinX = int.MaxValue;
         generatedMaxX = int.MinValue;
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.OnLevelAdvanced += HandleLevelChange;
+        }
     }
 
     void Update()
     {
-        int targetX = Mathf.FloorToInt(target.position.x);
+        targetX = Mathf.FloorToInt(target.position.x);
         int generateToX = targetX + viewDistance;
         int generateFromX = targetX - 4; // чуть левее, чтобы избежать пробелов
 
@@ -72,5 +77,14 @@ public class GroundTileGenerator : MonoBehaviour
         {
             tilemap.SetTile(new Vector3Int(x, groundHeightY - y, 0), dirtTile);
         }
+    }
+    private void OnDisable()
+    {
+        LevelManager.Instance.OnLevelAdvanced -= HandleLevelChange;
+    }
+
+    private void HandleLevelChange()
+    {
+        tilemap.ClearAllTiles();
     }
 }

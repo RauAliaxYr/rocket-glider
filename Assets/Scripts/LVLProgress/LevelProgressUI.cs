@@ -11,13 +11,26 @@ public class LevelProgressUI : MonoBehaviour
     private void Start()
     {
         distanceToPass = LevelManager.Instance.CurrentLevel.requiredDistanceToPass;
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.OnLevelAdvanced += ResetDistanceToPass;
+        }
     }
 
     private void Update()
     {
-        if (flightTracker == null || distanceToPass <= 0f) return;
+        if (!flightTracker || distanceToPass <= 0f) return;
 
         float progress = Mathf.Clamp01(flightTracker.distanceTravelled / distanceToPass);
         progressFillImage.fillAmount = progress;
+    }
+    private void OnDisable()
+    {
+        LevelManager.Instance.OnLevelAdvanced -= ResetDistanceToPass;
+    }
+
+    private void ResetDistanceToPass()
+    {
+        distanceToPass = LevelManager.Instance.CurrentLevel.requiredDistanceToPass;
     }
 }

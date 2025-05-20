@@ -185,7 +185,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Flux_Dev_Tiny_pixel_art_cloud_ultralow_resolution_eg_16x16_or__0_0: -205072371530528549
+      Flux_Dev_Tiny_pixel_art_cloud_ultralow_resolution_eg_16x16_or__0_1: 8022161495640107937
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
