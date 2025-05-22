@@ -13,6 +13,7 @@ public class StartupSequence : MonoBehaviour
 
     private void Start()
     {
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.menuMusic);
         studioLogoImage.canvasRenderer.SetAlpha(0f);
         mainMenuRoot.SetActive(false);
         StartCoroutine(PlayStartupSequence());

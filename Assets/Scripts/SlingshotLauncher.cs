@@ -18,11 +18,15 @@ public class SlingshotLauncher : MonoBehaviour
     private Vector2 startPosition;
     private bool hasCrashed = false;
     
+    private AudioSource audioSourceEngine;
+    [SerializeField]private AudioSource AudioSourceTap;
+    
 
     void Start()
     {
         startPosition = transform.position;
         rb = GetComponent<Rigidbody2D>();
+        audioSourceEngine = GetComponent<AudioSource>();
         rb.bodyType = RigidbodyType2D.Kinematic; // Пока не запустили — отключаем физику
     }
 
@@ -82,6 +86,7 @@ public class SlingshotLauncher : MonoBehaviour
         hasLaunched = true;
         tapsLeft = UpgradeManager.Instance.GetMaxTaps();
         isDragging = false;
+        audioSourceEngine.Play();
     }
     void HandleInAirTap()
     {
@@ -100,6 +105,8 @@ public class SlingshotLauncher : MonoBehaviour
 
     void TapImpulse()
     {
+        AudioSourceTap.Play();
+        
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Обнуляем вертикальную скорость
         rb.AddForce(Vector2.up * UpgradeManager.Instance.GetTapImpulse(), ForceMode2D.Impulse);
         tapsLeft--;
@@ -141,6 +148,7 @@ public class SlingshotLauncher : MonoBehaviour
     void EndFlight()
     {
         rb.simulated = false; // Отключаем физику
+        audioSourceEngine.Stop();
         rewardBannerUI.Show(tracker.TakeCoindByTravel());
     }
     void MaintainTargetSpeed()
