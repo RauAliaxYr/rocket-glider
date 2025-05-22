@@ -13,6 +13,8 @@ public class RewardBannerUI : MonoBehaviour
     [SerializeField] private float countDuration = 1f;
     [SerializeField] private SlingshotLauncher plane;
     [SerializeField] private UpgradeUI upgradeUI;
+    
+    private AudioSource coinSoundSource;
 
     private void Awake()
     {
@@ -25,6 +27,10 @@ public class RewardBannerUI : MonoBehaviour
     {
         gameObject.SetActive(true);
         Time.timeScale = 0f; // Останавливаем время
+
+        coinSoundSource = GetComponent<AudioSource>();
+        coinSoundSource.Play();
+        
         StartCoroutine(ShowRoutine(coinsEarned));
     }
 
@@ -78,6 +84,7 @@ public class RewardBannerUI : MonoBehaviour
             canvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
             yield return null;
         }
+        coinSoundSource.Stop();
 
         gameObject.SetActive(false);
         

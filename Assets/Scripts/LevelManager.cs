@@ -13,6 +13,11 @@ public class LevelManager : MonoBehaviour
 
     public LevelData CurrentLevel => levels[currentLevelIndex];
 
+    private void Start()
+    {
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.flightMusic);
+    }
+
     private void Awake()
     {
         if (Instance == null)
