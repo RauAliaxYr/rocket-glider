@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e6b630fdc394bf448ff3b598fdc1eba, type: 3}
   m_Name: LevelData 1
   m_EditorClassIdentifier: 
-  levelName: Level_02
+  levelName: Level_01
   requiredDistanceToPass: 40
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
   topGroundTile: {fileID: 11400000, guid: fd54a7885f7661446aff1afdfc04dd77, type: 2}
-  groundFillTile: {fileID: 11400000, guid: fd54a7885f7661446aff1afdfc04dd77, type: 2}
+  groundFillTile: {fileID: 11400000, guid: 34116b25e8c1d1e4d99118dcf8f39d03, type: 2}
   backgroundTile: {fileID: 11400000, guid: 82e815f77aec774458841922d31df2e4, type: 2}
   backgroundSprite: {fileID: 8171545356652504472, guid: 41d13402bb8e5ed4598bb498ccb8ae4c, type: 3}
   backgroundScrollSpeed: 0.2
