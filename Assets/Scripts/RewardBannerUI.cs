@@ -10,8 +10,7 @@ public class RewardBannerUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rewardText;
     [SerializeField] private Button restartButton;
     [SerializeField] private float fadeDuration = 0.5f;
-    [SerializeField] private float countDuration = 1f;
-    [SerializeField] private SlingshotLauncher plane;
+    [SerializeField] private float countDuration ;
     [SerializeField] private UpgradeUI upgradeUI;
     
     private AudioSource coinSoundSource;

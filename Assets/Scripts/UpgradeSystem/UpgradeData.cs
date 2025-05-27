@@ -10,14 +10,16 @@ public class UpgradeData
     public int launchPurchases = 0;
     public int tapPurchases = 0;
 
-    private const int purchasesPerLevel = 3;
+    private int purchasesPerLevel = 3;
 
-    public int PlaneLevel => Mathf.Min(speedLevel, launchLevel, tapLevel) / purchasesPerLevel + 2;
+    public int PlaneLevel => Mathf.Min(speedLevel, launchLevel, tapLevel) + 1;
 
     public bool TryUpgrade(ref int purchases, ref int level)
     {
+        int requiredPurchases = purchasesPerLevel + level;
+
         purchases++;
-        if (purchases >= purchasesPerLevel)
+        if (purchases >= requiredPurchases)
         {
             purchases = 0;
             level++;
@@ -30,6 +32,9 @@ public class UpgradeData
         PlayerPrefs.SetInt("SpeedLevel", speedLevel);
         PlayerPrefs.SetInt("LaunchLevel", launchLevel);
         PlayerPrefs.SetInt("TapLevel", tapLevel);
+        PlayerPrefs.SetInt("SpeedLevelPurch", speedPurchases);
+        PlayerPrefs.SetInt("LaunchLevelPurch", launchPurchases);
+        PlayerPrefs.SetInt("TapLevelPurch", tapPurchases);
         PlayerPrefs.Save();
     }
 
@@ -38,6 +43,8 @@ public class UpgradeData
         speedLevel = PlayerPrefs.GetInt("SpeedLevel", 0);
         launchLevel = PlayerPrefs.GetInt("LaunchLevel", 0);
         tapLevel = PlayerPrefs.GetInt("TapLevel", 0);
-        
+        speedPurchases=PlayerPrefs.GetInt("SpeedLevelPurch", 0);
+        launchPurchases=PlayerPrefs.GetInt("LaunchLevelPurch", 0);
+        tapPurchases=PlayerPrefs.GetInt("TapLevelPurch",0 );
     }
 }
