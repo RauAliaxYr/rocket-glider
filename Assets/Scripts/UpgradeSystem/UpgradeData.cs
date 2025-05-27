@@ -10,7 +10,7 @@ public class UpgradeData
     public int launchPurchases = 0;
     public int tapPurchases = 0;
 
-    private const int purchasesPerLevel = 3;
+    private int purchasesPerLevel = 3;
 
     public int PlaneLevel => Mathf.Min(speedLevel, launchLevel, tapLevel) / purchasesPerLevel + 2;
 
@@ -21,6 +21,7 @@ public class UpgradeData
         {
             purchases = 0;
             level++;
+            purchasesPerLevel += 1;
             return true; // уровень апгрейда вырос
         }
         return false;
