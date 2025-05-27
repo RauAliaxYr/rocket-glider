@@ -7,7 +7,7 @@ public class UpgradeUI : MonoBehaviour
 {
     public Transform upgradesParent;
     public GameObject upgradeItemPrefab;
-    public SlingshotLauncher plane;
+    public AircraftController plane;
     public CanvasGroup canvasGroup;
     public Button restartButton;
     
@@ -24,9 +24,7 @@ public class UpgradeUI : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-
         CreateUI();
-        
     }
 
     void CreateUpgradeItem(string name, UpgradeConfig config, int level, System.Action onUpgrade, int purchases, int maxPurchase)
@@ -84,7 +82,7 @@ public class UpgradeUI : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        plane.ResetToStart();// Сбрасываем самолёт
+        plane.ResetAircraft();// Сбрасываем самолёт
         
         if (LevelManager.Instance.IsLevelReadyToAdvance)
         {

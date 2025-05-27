@@ -1147,7 +1147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradesParent: {fileID: 649227308}
   upgradeItemPrefab: {fileID: 1597956970077252629, guid: 1eb25a84d733b40418bf2133443d0ae4, type: 3}
-  plane: {fileID: 1706483033}
+  plane: {fileID: 1706483040}
   canvasGroup: {fileID: 28465083}
   restartButton: {fileID: 126587666}
 --- !u!1 &901723364
@@ -2850,7 +2850,7 @@ MonoBehaviour:
   restartButton: {fileID: 1311232524}
   fadeDuration: 0.5
   countDuration: 1
-  plane: {fileID: 1706483033}
+  plane: {fileID: 0}
   upgradeUI: {fileID: 882799920}
 --- !u!225 &1686545947
 CanvasGroup:
@@ -2972,9 +2972,13 @@ GameObject:
   - component: {fileID: 1706483032}
   - component: {fileID: 1706483031}
   - component: {fileID: 1706483030}
-  - component: {fileID: 1706483033}
   - component: {fileID: 1706483034}
   - component: {fileID: 1706483035}
+  - component: {fileID: 1706483040}
+  - component: {fileID: 1706483039}
+  - component: {fileID: 1706483038}
+  - component: {fileID: 1706483037}
+  - component: {fileID: 1706483036}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -3071,22 +3075,6 @@ Transform:
   - {fileID: 746930672}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1706483033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1706483028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb74b0fb0eccc854d9668a72c1071bbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rewardBannerUI: {fileID: 1686545946}
-  tracker: {fileID: 1706483034}
-  speedCorrectionForce: 1
-  AudioSourceTap: {fileID: 1030484786}
 --- !u!114 &1706483034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3196,6 +3184,80 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1706483036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706483028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e18be7bf2d58bf94ba018b7f13da1697, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 1706483031}
+  audioSourceTap: {fileID: 1030484786}
+--- !u!114 &1706483037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706483028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaa3b2135061cfc4e8d1f5a99008adf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 1706483031}
+  tracker: {fileID: 1706483034}
+--- !u!114 &1706483038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706483028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52393dd9449a47b4598e1bbed087422e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 1706483031}
+  speedCorrectionForce: 0
+--- !u!114 &1706483039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706483028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdbad3732f5b7314cada539dfcbc2a94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 1706483031}
+  rewardBannerUI: {fileID: 1686545946}
+  tracker: {fileID: 1706483034}
+  audioSourceEngine: {fileID: 1706483035}
+--- !u!114 &1706483040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706483028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b19420a43481fe241afd146e6bf0e10d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  launcher: {fileID: 1706483037}
+  tapController: {fileID: 1706483036}
+  flightController: {fileID: 1706483038}
+  crashHandler: {fileID: 1706483039}
 --- !u!1 &1751907953
 GameObject:
   m_ObjectHideFlags: 0

@@ -291,10 +291,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1000, y: 600}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -858,12 +858,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicSource: {fileID: 1718570570}
-  sfxSource: {fileID: 0}
   menuMusic: {fileID: 8300000, guid: e4c062c73646b064d98a52fdcad6a69d, type: 3}
   flightMusic: {fileID: 8300000, guid: 946eebe4595b4e04bae57a5c0dd9ae61, type: 3}
-  tapSfx: {fileID: 8300000, guid: bec3396ae6aa4f647a135c90b2ce4557, type: 3}
-  launchSfx: {fileID: 8300000, guid: 10c5448aedba0474a96b50f6126baf58, type: 3}
-  buttonClickSfx: {fileID: 8300000, guid: a4353c5cbb05d294691a7d99f118bf4d, type: 3}
 --- !u!4 &1718570569
 Transform:
   m_ObjectHideFlags: 0
@@ -1124,7 +1120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1.5
   m_ReferenceResolution: {x: 800, y: 600}
