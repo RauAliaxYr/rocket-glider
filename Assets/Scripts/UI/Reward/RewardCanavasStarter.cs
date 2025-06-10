@@ -10,7 +10,7 @@ public class RewardCanavasStarter : MonoBehaviour
 #if UNITY_EDITOR || UNITY_STANDALONE
         GetComponent<CanvasScaler>().referenceResolution = scalerWindows;
 #elif UNITY_ANDROID || UNITY_IOS
-        GetComponent<CanvasScaler>().referenceResolution = scaleAndroid;
+        GetComponent<CanvasScaler>().referenceResolution = scalerAndroid;
 #endif
     }
 }
