@@ -7,8 +7,8 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources")]
     [SerializeField] private AudioSource musicSource;
     
-    private bool isMusicOn;
-    private bool isSfxOn;
+    private bool _isMusicOn;
+    private bool _isSfxOn;
 
     private void Awake()
     {
@@ -23,10 +23,10 @@ public class AudioManager : MonoBehaviour
 
     private void LoadSettings()
     {
-        isMusicOn = PlayerPrefs.GetInt("MusicOn", 1) == 1;
-        isSfxOn = PlayerPrefs.GetInt("SfxOn", 1) == 1;
+        _isMusicOn = PlayerPrefs.GetInt("MusicOn", 1) == 1;
+        _isSfxOn = PlayerPrefs.GetInt("SfxOn", 1) == 1;
 
-        musicSource.mute = !isMusicOn;
+        musicSource.mute = !_isMusicOn;
     }
 
     public void PlayMusic(AudioClip clip)
@@ -38,12 +38,12 @@ public class AudioManager : MonoBehaviour
     
     public void ToggleMusic(bool on)
     {
-        isMusicOn = on;
+        _isMusicOn = on;
         musicSource.mute = !on;
         PlayerPrefs.SetInt("MusicOn", on ? 1 : 0);
     }
-    public bool IsMusicOn => isMusicOn;
-    public bool IsSfxOn => isSfxOn;
+    public bool IsMusicOn => _isMusicOn;
+    public bool IsSfxOn => _isSfxOn;
 }
 
 

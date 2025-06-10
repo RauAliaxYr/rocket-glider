@@ -1,34 +1,37 @@
+using System;
 using UnityEngine;
 
 public class CloudMove : MonoBehaviour
 {
-    private float speed;
-    private BackgroundManager manager;
+    private float _speed;
+    private float _despawnX; // Кэшируем значение, чтобы не запрашивать каждый кадр
+    private ICloudPool _pool;
 
-    public void Initialize(BackgroundManager manager, float speed)
+    // Инициализация (вызывается при создании или взятии из пула)
+    public void Initialize(ICloudPool pool, float speed, float despawnX) 
     {
-        this.manager = manager;
-        this.speed = speed;
+        if (pool == null) 
+            throw new ArgumentNullException(nameof(pool), "Pool cannot be null!");
+
+        this._pool = pool;
+        this._speed = speed;
+        this._despawnX = despawnX;
     }
 
-    void Update()
+    void Update() 
     {
-        transform.Translate(Vector3.left * (speed * Time.deltaTime));
+        // Движение влево
+        transform.Translate(Vector3.left * (_speed * Time.deltaTime));
         
-        if (IsOutOfScreen())
+        // Проверка на выход за экран
+        if (transform.position.x < _despawnX) 
         {
-            manager.ReturnCloudToPool(this);
+            _pool.ReturnToPool(this);
         }
     }
 
-    // ReSharper disable Unity.PerformanceAnalysis
-    bool IsOutOfScreen()
-    {
-        return transform.position.x < manager.GetDespawnX();
-    }
-
-    // ReSharper disable Unity.PerformanceAnalysis
-    public void ResetCloud(Vector3 position)
+    // Сброс позиции при повторном использовании
+    public void ResetCloud(Vector3 position) 
     {
         transform.position = position;
     }

@@ -3,34 +3,42 @@ using UnityEngine.Tilemaps;
 
 public class GroundTileGenerator : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private Tilemap tilemap;
-    [SerializeField] private TileBase grassTile;
-    [SerializeField] private TileBase dirtTile;
     [SerializeField] private Transform target;
+    
+    [Header("Settings")]
     [SerializeField] private int viewDistance = 30;
     [SerializeField] private int groundHeightY = -3;
     [SerializeField] private int dirtDepth = 10;
     [SerializeField] private int cleanupDistanceBehind = 20;
 
-    private int generatedMinX;
-    private int generatedMaxX;
-    private int targetX;
+    private TileBase _grassTile;
+    private TileBase _dirtTile;
+    
+    private int _generatedMinX;
+    private int _generatedMaxX;
+    private int _targetX;
+    
+    private const int PregenOffset = 4; 
 
     void Start()
     {
-        generatedMinX = int.MaxValue;
-        generatedMaxX = int.MinValue;
+        _generatedMinX = int.MaxValue;
+        _generatedMaxX = int.MinValue;
         if (LevelManager.Instance != null)
         {
             LevelManager.Instance.OnLevelAdvanced += HandleLevelChange;
         }
+        _grassTile = LevelManager.Instance.CurrentLevel.topGroundTile;
+        _dirtTile = LevelManager.Instance.CurrentLevel.groundFillTile;
     }
 
     void Update()
     {
-        targetX = Mathf.FloorToInt(target.position.x);
-        int generateToX = targetX + viewDistance;
-        int generateFromX = targetX - 4; // чуть левее, чтобы избежать пробелов
+        _targetX = Mathf.FloorToInt(target.position.x);
+        int generateToX = _targetX + viewDistance;
+        int generateFromX = _targetX - PregenOffset; // чуть левее, чтобы избежать пробелов
 
         // Генерация вперёд
         for (int x = generateFromX; x <= generateToX; x++)
@@ -40,8 +48,8 @@ public class GroundTileGenerator : MonoBehaviour
                 GenerateColumn(x);
             }
 
-            generatedMinX = Mathf.Min(generatedMinX, x);
-            generatedMaxX = Mathf.Max(generatedMaxX, x);
+            _generatedMinX = Mathf.Min(_generatedMinX, x);
+            _generatedMaxX = Mathf.Max(_generatedMaxX, x);
         }
         //DeleteTileFromBeh(targetX);
     }
@@ -51,7 +59,7 @@ public class GroundTileGenerator : MonoBehaviour
         // Удаление тайлов позади
         int cleanupToX = targetX - cleanupDistanceBehind;
 
-        for (int x = generatedMinX; x < cleanupToX; x++)
+        for (int x = _generatedMinX; x < cleanupToX; x++)
         {
             tilemap.SetTile(new Vector3Int(x, groundHeightY, 0), null);
 
@@ -61,30 +69,34 @@ public class GroundTileGenerator : MonoBehaviour
             }
         }
 
-        generatedMinX = cleanupToX; // Обновляем границу
+        _generatedMinX = cleanupToX; // Обновляем границу
     }
 
     void GenerateColumn(int x)
     {
-        grassTile = LevelManager.Instance.CurrentLevel.topGroundTile;
-        dirtTile = LevelManager.Instance.CurrentLevel.groundFillTile;
+        
         
         // Верхний слой - трава
-        tilemap.SetTile(new Vector3Int(x, groundHeightY, 0), grassTile);
+        tilemap.SetTile(new Vector3Int(x, groundHeightY, 0), _grassTile);
 
         // Под травой - земля
         for (int y = 1; y <= dirtDepth; y++)
         {
-            tilemap.SetTile(new Vector3Int(x, groundHeightY - y, 0), dirtTile);
+            tilemap.SetTile(new Vector3Int(x, groundHeightY - y, 0), _dirtTile);
         }
     }
     private void OnDisable()
     {
-        LevelManager.Instance.OnLevelAdvanced -= HandleLevelChange;
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.OnLevelAdvanced -= HandleLevelChange;
+        }
     }
 
     private void HandleLevelChange()
     {
         tilemap.ClearAllTiles();
+        _grassTile = LevelManager.Instance.CurrentLevel.topGroundTile;
+        _dirtTile = LevelManager.Instance.CurrentLevel.groundFillTile;
     }
 }
