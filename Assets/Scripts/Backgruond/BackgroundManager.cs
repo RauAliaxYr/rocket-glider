@@ -6,9 +6,9 @@ using UnityEngine.Tilemaps;
 public class BackgroundManager : MonoBehaviour
 {
    [Header("References")]
-    public SpriteRenderer backgroundRenderer;
-    public CloudMove cloudPrefab; // Префаб облака
-    public Transform cloudContainer;
+    [SerializeField] private SpriteRenderer backgroundRenderer;
+    [SerializeField] private CloudMove cloudPrefab; // Префаб облака
+    [SerializeField] private Transform cloudContainer;
 
     // Настройки из LevelData
     private float cloudSpawnRate;
@@ -17,27 +17,35 @@ public class BackgroundManager : MonoBehaviour
     private Vector2 cloudScaleRange;
     private Sprite[] cloudSprites;
 
+    [SerializeField] private int cloudsLimit = 6;
+
     public float DespawnXPosition { get; private set; }
 
     private Queue<CloudMove> cloudPool ;
     private List<CloudMove> activeClouds ;
     private float spawnTimer;
     private float scrollOffset;
+    
+    private Camera mainCamera;
+    
+    private Material backgroundMaterial;
 
     void Start()
     {
+        backgroundMaterial = backgroundRenderer.material;
+        mainCamera = Camera.main;
         activeClouds = new List<CloudMove>();
         cloudPool = new Queue<CloudMove>();
         LevelData levelData = LevelManager.Instance.CurrentLevel;
-        InitializeFromLevelData(levelData);
         CalculateDespawnPosition();
+        InitializeFromLevelData(levelData);
     }
 
     void InitializeFromLevelData(LevelData data)
     {
         // Фон
         backgroundRenderer.sprite = data.backgroundSprite;
-        Camera.main.backgroundColor = data.backgroundColor;
+        mainCamera.backgroundColor = data.backgroundColor;
         
         // Облака
         cloudSpawnRate = data.cloudSpawnRate;
@@ -49,7 +57,7 @@ public class BackgroundManager : MonoBehaviour
 
     void CalculateDespawnPosition()
     {
-        DespawnXPosition = Camera.main.ViewportToWorldPoint(new Vector3(-0.2f, 0)).x;
+        DespawnXPosition = mainCamera.ViewportToWorldPoint(new Vector3(-0.2f, 0)).x;
     }
 
     void Update()
@@ -61,12 +69,12 @@ public class BackgroundManager : MonoBehaviour
     void ScrollBackground()
     {
         scrollOffset += Time.deltaTime * LevelManager.Instance.CurrentLevel.backgroundScrollSpeed;
-        backgroundRenderer.material.mainTextureOffset = new Vector2(scrollOffset, 0);
+        backgroundMaterial.mainTextureOffset = new Vector2(scrollOffset, 0);
     }
 
     void TrySpawnCloud()
     {
-        if (activeClouds.Count >= 6) return;
+        if (activeClouds.Count >= cloudsLimit) return;
         
         spawnTimer -= Time.deltaTime;
         if (spawnTimer <= 0)
@@ -95,6 +103,7 @@ public class BackgroundManager : MonoBehaviour
         cloud.gameObject.SetActive(true);
         activeClouds.Add(cloud);
     }
+    
 
     CloudMove GetCloudFromPool()
     {
@@ -113,10 +122,11 @@ public class BackgroundManager : MonoBehaviour
 
     public void ReturnCloudToPool(CloudMove cloud)
     {
+        if (!cloud) return;
         cloud.gameObject.SetActive(false);
         activeClouds.Remove(cloud);
         cloudPool.Enqueue(cloud);
     }
-    public float GetSpawnX() => Camera.main.ViewportToWorldPoint(new Vector3(1.1f, 0)).x;
-    public float GetDespawnX() => Camera.main.ViewportToWorldPoint(new Vector3(-0.2f, 0)).x;
+    public float GetSpawnX() => mainCamera.ViewportToWorldPoint(new Vector3(1.1f, 0)).x;
+    public float GetDespawnX() => mainCamera.ViewportToWorldPoint(new Vector3(-0.2f, 0)).x;
 }
