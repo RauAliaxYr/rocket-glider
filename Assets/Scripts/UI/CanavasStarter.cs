@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RewardCanavasStarter : MonoBehaviour
+public class CanavasStarter : MonoBehaviour
 {
     [SerializeField] private Vector2 scalerWindows;
     [SerializeField] private Vector2 scalerAndroid;

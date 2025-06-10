@@ -5,15 +5,19 @@ using UnityEngine.UI;
 
 public class StartupSequence : MonoBehaviour
 {
+    [Header("Studio Logo")]
     [SerializeField] private Image studioLogoImage;
     [SerializeField] private GameObject logoCanavas;
     [SerializeField] private GameObject mainMenuRoot;
     [SerializeField] private float logoFadeDuration = 1.5f;
     [SerializeField] private float logoDisplayDuration = 1.5f;
 
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip musicMenu;
+
     private void Start()
     {
-        AudioManager.Instance.PlayMusic(AudioManager.Instance.menuMusic);
+        AudioManager.Instance.PlayMusic(musicMenu);
         studioLogoImage.canvasRenderer.SetAlpha(0f);
         mainMenuRoot.SetActive(false);
         StartCoroutine(PlayStartupSequence());

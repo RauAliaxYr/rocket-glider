@@ -5,24 +5,20 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance { get; private set; }
 
     [Header("Audio Sources")]
-    public AudioSource musicSource;
-
-    [Header("Audio Clips")]
-    public AudioClip menuMusic;
-    public AudioClip flightMusic;
-
+    [SerializeField] private AudioSource musicSource;
+    
     private bool isMusicOn;
     private bool isSfxOn;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            LoadSettings();
+        if (Instance != null && Instance != this) {
+            Destroy(gameObject);
+            return;
         }
-        else Destroy(gameObject);
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        LoadSettings();
     }
 
     private void LoadSettings()
