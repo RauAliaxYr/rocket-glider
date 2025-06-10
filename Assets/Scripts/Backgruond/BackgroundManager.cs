@@ -3,130 +3,131 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class BackgroundManager : MonoBehaviour
+public class BackgroundManager : MonoBehaviour, ICloudPool
 {
-   [Header("References")]
-    [SerializeField] private SpriteRenderer backgroundRenderer;
-    [SerializeField] private CloudMove cloudPrefab; // Префаб облака
-    [SerializeField] private Transform cloudContainer;
+   [Header("Settings")]
+    [SerializeField] private float _cloudSpawnRate = 2f;
+    [SerializeField] private Vector2 _cloudHeightRange = new Vector2(-2f, 2f);
+    [SerializeField] private Vector2 _cloudSpeedRange = new Vector2(1f, 3f);
+    [SerializeField] private Vector2 _cloudScaleRange = new Vector2(0.5f, 1.5f);
 
-    // Настройки из LevelData
-    private float cloudSpawnRate;
-    private Vector2 cloudHeightRange;
-    private Vector2 cloudSpeedRange;
-    private Vector2 cloudScaleRange;
-    private Sprite[] cloudSprites;
+    [Header("References")]
+    [SerializeField] private SpriteRenderer _backgroundRenderer;
+    [SerializeField] private CloudMove _cloudPrefab;
+    [SerializeField] private Transform _cloudContainer;
+    [SerializeField] private Sprite[] _cloudSprites;
 
-    [SerializeField] private int cloudsLimit = 6;
+    private Camera _mainCamera;
+    private Material _backgroundMaterial;
+    private float _scrollOffset;
+    private float _spawnTimer;
+    private Queue<CloudMove> _cloudPool = new Queue<CloudMove>();
+    private List<CloudMove> _activeClouds = new List<CloudMove>();
 
-    public float DespawnXPosition { get; private set; }
+    private const float CLOUD_SPAWN_X = 1.5f;
+    private const float CLOUD_DESPAWN_X = -0.2f;
+    private const int MAX_CLOUDS = 8;
 
-    private Queue<CloudMove> cloudPool ;
-    private List<CloudMove> activeClouds ;
-    private float spawnTimer;
-    private float scrollOffset;
-    
-    private Camera mainCamera;
-    
-    private Material backgroundMaterial;
-
-    void Start()
+    private void Awake() 
     {
-        backgroundMaterial = backgroundRenderer.material;
-        mainCamera = Camera.main;
-        activeClouds = new List<CloudMove>();
-        cloudPool = new Queue<CloudMove>();
-        LevelData levelData = LevelManager.Instance.CurrentLevel;
-        CalculateDespawnPosition();
-        InitializeFromLevelData(levelData);
+        _mainCamera = Camera.main;
+        _backgroundMaterial = _backgroundRenderer.material;
     }
 
-    void InitializeFromLevelData(LevelData data)
+    private void Start() 
     {
-        // Фон
-        backgroundRenderer.sprite = data.backgroundSprite;
-        mainCamera.backgroundColor = data.backgroundColor;
-        
-        // Облака
-        cloudSpawnRate = data.cloudSpawnRate;
-        cloudHeightRange = data.cloudHeightRange;
-        cloudSpeedRange = data.cloudSpeedRange;
-        cloudScaleRange = data.cloudScaleRange;
-        cloudSprites = data.cloudSprites;
+        PrewarmPool(4); // Создаём 4 облака заранее
     }
 
-    void CalculateDespawnPosition()
-    {
-        DespawnXPosition = mainCamera.ViewportToWorldPoint(new Vector3(-0.2f, 0)).x;
-    }
-
-    void Update()
+    private void Update() 
     {
         ScrollBackground();
         TrySpawnCloud();
     }
 
-    void ScrollBackground()
+    // --- Фон ---
+    private void ScrollBackground() 
     {
-        scrollOffset += Time.deltaTime * LevelManager.Instance.CurrentLevel.backgroundScrollSpeed;
-        backgroundMaterial.mainTextureOffset = new Vector2(scrollOffset, 0);
+        _scrollOffset += Time.deltaTime * LevelManager.Instance.CurrentLevel.backgroundScrollSpeed;
+        _backgroundMaterial.mainTextureOffset = new Vector2(_scrollOffset, 0);
     }
 
-    void TrySpawnCloud()
+    //  Пул облаков 
+    private void PrewarmPool(int count) 
     {
-        if (activeClouds.Count >= cloudsLimit) return;
-        
-        spawnTimer -= Time.deltaTime;
-        if (spawnTimer <= 0)
+        for (int i = 0; i < count; i++) 
         {
-            SpawnCloud();
-            spawnTimer = cloudSpawnRate;
+            CreateNewCloud();
         }
     }
 
-    void SpawnCloud()
+    private void TrySpawnCloud() 
+    {
+        if (_activeClouds.Count >= MAX_CLOUDS) return;
+        
+        _spawnTimer -= Time.deltaTime;
+        if (_spawnTimer <= 0) 
+        {
+            SpawnCloud();
+            _spawnTimer = _cloudSpawnRate;
+        }
+    }
+
+    private void SpawnCloud() 
     {
         CloudMove cloud = GetCloudFromPool();
         
-        // Настройки из LevelData
-        Sprite randomSprite = cloudSprites[Random.Range(0, cloudSprites.Length)];
-        float speed = Random.Range(cloudSpeedRange.x, cloudSpeedRange.y);
+        // Настройки облака
+        Sprite randomSprite = _cloudSprites[Random.Range(0, _cloudSprites.Length)];
+        float speed = Random.Range(_cloudSpeedRange.x, _cloudSpeedRange.y);
         Vector3 position = new Vector3(
-            Camera.main.ViewportToWorldPoint(new Vector3(1.9f, 0)).x,
-            Random.Range(cloudHeightRange.x, cloudHeightRange.y),
+            _mainCamera.ViewportToWorldPoint(new Vector3(CLOUD_SPAWN_X, 0)).x,
+            Random.Range(_cloudHeightRange.x, _cloudHeightRange.y),
             0
         );
-        Vector3 scale = Vector3.one * Random.Range(cloudScaleRange.x, cloudScaleRange.y);
+        Vector3 scale = Vector3.one * Random.Range(_cloudScaleRange.x, _cloudScaleRange.y);
 
-        cloud.Initialize( this,speed );
+        // Инициализация
+        cloud.Initialize(
+            pool: this,
+            speed: speed,
+            despawnX: _mainCamera.ViewportToWorldPoint(new Vector3(CLOUD_DESPAWN_X, 0)).x
+        );
         cloud.ResetCloud(position);
+        cloud.transform.localScale = scale;
+        cloud.GetComponent<SpriteRenderer>().sprite = randomSprite;
+        
+        _activeClouds.Add(cloud);
+    }
+
+    private CloudMove GetCloudFromPool() 
+    {
+        if (_cloudPool.Count == 0)
+            CreateNewCloud();
+
+        CloudMove cloud = _cloudPool.Dequeue();
         cloud.gameObject.SetActive(true);
-        activeClouds.Add(cloud);
+        return cloud;
+    }
+
+    private void CreateNewCloud() 
+    {
+        CloudMove cloud = Instantiate(_cloudPrefab, _cloudContainer);
+        cloud.gameObject.SetActive(false);
+        _cloudPool.Enqueue(cloud);
     }
     
-
-    CloudMove GetCloudFromPool()
+    public void ReturnToPool(CloudMove cloud) 
     {
-        if (cloudPool.Count == 0)
-            CreateNewCloudInPool();
-
-        return cloudPool.Dequeue();
-    }
-
-    void CreateNewCloudInPool()
-    {
-        CloudMove newCloud = Instantiate(cloudPrefab, cloudContainer);
-        newCloud.gameObject.SetActive(false);
-        cloudPool.Enqueue(newCloud);
-    }
-
-    public void ReturnCloudToPool(CloudMove cloud)
-    {
-        if (!cloud) return;
+        if (cloud == null) return;
+        
         cloud.gameObject.SetActive(false);
-        activeClouds.Remove(cloud);
-        cloudPool.Enqueue(cloud);
+        _activeClouds.Remove(cloud);
+        _cloudPool.Enqueue(cloud);
     }
-    public float GetSpawnX() => mainCamera.ViewportToWorldPoint(new Vector3(1.1f, 0)).x;
-    public float GetDespawnX() => mainCamera.ViewportToWorldPoint(new Vector3(-0.2f, 0)).x;
+
+    public float GetDespawnX() 
+    {
+        return _mainCamera.ViewportToWorldPoint(new Vector3(CLOUD_DESPAWN_X, 0)).x;
+    }
 }
