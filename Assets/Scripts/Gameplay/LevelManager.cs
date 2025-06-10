@@ -6,16 +6,19 @@ public class LevelManager : MonoBehaviour
     public event Action OnLevelAdvanced;
     public static LevelManager Instance { get; private set; }
     public bool IsLevelReadyToAdvance { get; private set; } = false;
-
+    [Header("Level Data")]
     [SerializeField] private LevelData[] levels;
     private int currentLevelIndex = 0;
     private const string LevelKey = "CurrentLevelIndex";
 
     public LevelData CurrentLevel => levels[currentLevelIndex];
+    
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip levelAudioClip ;
 
     private void Start()
     {
-        AudioManager.Instance.PlayMusic(AudioManager.Instance.flightMusic);
+        AudioManager.Instance.PlayMusic(levelAudioClip);
     }
 
     private void Awake()
