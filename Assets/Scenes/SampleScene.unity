@@ -1825,7 +1825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e949e808f5b02478c2096052863e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levels:
+  _levels:
   - {fileID: 11400000, guid: efd9eb48dbb26f144b09afaadafb00a7, type: 2}
   - {fileID: 11400000, guid: 21e03ae8b2a7bdb4181304147adb45ce, type: 2}
   - {fileID: 11400000, guid: e2edb54995e773048a95e5b541da7059, type: 2}
@@ -1834,7 +1834,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 28b40b35220a22543b09d76ffedebe8f, type: 2}
   - {fileID: 11400000, guid: c494e1b7b61ee35419d8de384230848d, type: 2}
   - {fileID: 11400000, guid: 025ee8e5ea4aa324c9db14588c565d92, type: 2}
-  levelAudioClip: {fileID: 8300000, guid: 946eebe4595b4e04bae57a5c0dd9ae61, type: 3}
+  _levelMusic: {fileID: 8300000, guid: 946eebe4595b4e04bae57a5c0dd9ae61, type: 3}
 --- !u!114 &1131610924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3093,6 +3093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f02e8bb4498eb7448ad9cbb266302e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _coinsPerUnit: 10
 --- !u!82 &1706483035
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3202,8 +3203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18be7bf2d58bf94ba018b7f13da1697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 1706483031}
-  audioSourceTap: {fileID: 1030484786}
+  _rigidbody: {fileID: 1706483031}
+  _tapSound: {fileID: 1030484786}
+  _yVelocityReset: 0
 --- !u!114 &1706483037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3216,12 +3218,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa3b2135061cfc4e8d1f5a99008adf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 1706483031}
-  tracker: {fileID: 1706483034}
-  lineRenderer: {fileID: 1706483041}
-  maxLineLength: 2
-  lineStartColor: {r: 0, g: 1, b: 0, a: 1}
-  lineEndColor: {r: 1, g: 0, b: 0, a: 1}
+  _rb: {fileID: 1706483031}
+  _tracker: {fileID: 1706483034}
+  _lineRenderer: {fileID: 1706483041}
+  _maxDragLength: 3
+  _lineStartColor: {r: 0, g: 1, b: 0, a: 1}
+  _lineEndColor: {r: 1, g: 0, b: 0, a: 1}
+  _lineStartWidth: 0.1
+  _lineEndWidth: 0.5
 --- !u!114 &1706483038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3234,8 +3238,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52393dd9449a47b4598e1bbed087422e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 1706483031}
-  speedCorrectionForce: 0
+  _speedCorrectionForce: 0
+  _rotationSmoothness: 5
+  _minVelocityThreshold: 0.1
 --- !u!114 &1706483039
 MonoBehaviour:
   m_ObjectHideFlags: 0
