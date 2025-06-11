@@ -1,38 +1,69 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class AircraftFlightController : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private float speedCorrectionForce;
+    [Header("Settings")]
+    [SerializeField] private float _speedCorrectionForce = 1f;
+    [SerializeField] private float _rotationSmoothness = 5f;
+    [SerializeField] private float _minVelocityThreshold = 0.1f;
     
-    void Update()
+    private Rigidbody2D _rigidbody;
+    private UpgradeManager _upgradeManager;
+    
+    private void Awake()
     {
-        if (rb.bodyType == RigidbodyType2D.Dynamic)
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _upgradeManager = UpgradeManager.Instance;
+        
+        if (!_upgradeManager)
         {
-            MaintainTargetSpeed();
-            RotateTowardsVelocity();
+            Debug.LogError("UpgradeManager instance is missing!");
+            enabled = false;
         }
     }
-
-    void RotateTowardsVelocity()
+    private void Update()
     {
-        Vector2 velocity = rb.linearVelocity;
+        if (!IsActive()) return;
+        
+        MaintainTargetSpeed();
+        RotateTowardsVelocity();
+    }
+    private bool IsActive()
+    {
+        return _rigidbody && 
+               _rigidbody.bodyType == RigidbodyType2D.Dynamic;
+    }
 
-        if (velocity.sqrMagnitude > 0.01f)
+    private void RotateTowardsVelocity()
+    {
+        Vector2 velocity = _rigidbody.linearVelocity;
+
+        if (velocity.sqrMagnitude > _minVelocityThreshold)
         {
-            float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
-            Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5f * Time.deltaTime);
+            float targetAngle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+            Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetAngle);
+            
+            transform.rotation = Quaternion.Lerp(
+                transform.rotation,
+                targetRotation,
+                _rotationSmoothness * Time.deltaTime
+            );
         }
     }
-
-    void MaintainTargetSpeed()
+    private void MaintainTargetSpeed()
     {
-        float currentSpeedX = rb.linearVelocity.x;
-        float speedDifference = UpgradeManager.Instance.GetTargetSpeed() - currentSpeedX;
+        float currentSpeedX = _rigidbody.linearVelocity.x;
+        float targetSpeed = _upgradeManager.GetTargetSpeed();
+        float speedDifference = targetSpeed - currentSpeedX;
 
-        Vector2 force = new Vector2(speedDifference * speedCorrectionForce, 0f);
-        rb.AddForce(force, ForceMode2D.Force);
+        Vector2 correctionForce = new Vector2(
+            speedDifference * _speedCorrectionForce, 
+            0f
+        );
+        
+        _rigidbody.AddForce(correctionForce, ForceMode2D.Force);
     }
+    
 }
 

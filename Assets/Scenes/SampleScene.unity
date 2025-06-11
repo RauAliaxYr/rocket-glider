@@ -429,8 +429,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 518dc68de8353f645aab9834460080f5, type: 2}
+  m_sharedMaterial: {fileID: -3905645790145298276, guid: 518dc68de8353f645aab9834460080f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1210,8 +1210,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 518dc68de8353f645aab9834460080f5, type: 2}
+  m_sharedMaterial: {fileID: -3905645790145298276, guid: 518dc68de8353f645aab9834460080f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2440,7 +2440,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Play
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 518dc68de8353f645aab9834460080f5, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2506,7 +2506,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1335110962
@@ -3248,10 +3248,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdbad3732f5b7314cada539dfcbc2a94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 1706483031}
-  rewardBannerUI: {fileID: 1686545946}
-  tracker: {fileID: 1706483034}
-  audioSourceEngine: {fileID: 1706483035}
+  _rewardBannerUI: {fileID: 1686545946}
+  _tracker: {fileID: 1706483034}
+  _audioSourceEngine: {fileID: 1706483035}
+  _aircraftTapController: {fileID: 1706483036}
+  _crashTag: Ground
+  _crashDelay: 0.1
 --- !u!114 &1706483040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3264,10 +3266,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b19420a43481fe241afd146e6bf0e10d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launcher: {fileID: 1706483037}
-  tapController: {fileID: 1706483036}
-  flightController: {fileID: 1706483038}
-  crashHandler: {fileID: 1706483039}
+  _launcher: {fileID: 1706483037}
+  _tapController: {fileID: 1706483036}
+  _crashHandler: {fileID: 1706483039}
+  _audioSource: {fileID: 1706483035}
 --- !u!120 &1706483041
 LineRenderer:
   serializedVersion: 2
