@@ -37,7 +37,6 @@ public class CurrencyManager: MonoBehaviour
     {
         if (amount <= 0)
         {
-            Debug.LogWarning($"Попытка добавить некорректное количество: {amount}");
             return;
         }
 
@@ -47,7 +46,6 @@ public class CurrencyManager: MonoBehaviour
         }
         catch (OverflowException)
         {
-            Debug.LogError("Переполнение при добавлении монет!");
             Coins = int.MaxValue;
         }
     }
