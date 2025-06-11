@@ -4,11 +4,24 @@ using UnityEngine;
 public class CurrencyManager: MonoBehaviour
 {
     public static CurrencyManager Instance { get; private set; }
-
-    public int Coins { get;  set; } = 0;
-    
     public static event Action<int> OnCoinsChanged;
-
+    
+    private const string COINS_KEY = "Coins";
+    
+    private int _coins;
+    public int Coins 
+    { 
+        get => _coins;
+        private set
+        {
+            if (_coins != value)
+            {
+                _coins = value;
+                OnCoinsChanged?.Invoke(_coins);
+                Save();
+            }
+        }
+    }
     private void Awake()
     {
         if (Instance == null)
@@ -22,29 +35,38 @@ public class CurrencyManager: MonoBehaviour
 
     public void AddCoins(int amount)
     {
-        Coins += amount;
-        OnCoinsChanged?.Invoke(Coins);
-        Save();
+        if (amount <= 0)
+        {
+            Debug.LogWarning($"Попытка добавить некорректное количество: {amount}");
+            return;
+        }
+
+        try
+        {
+            Coins = checked(Coins + amount);
+        }
+        catch (OverflowException)
+        {
+            Debug.LogError("Переполнение при добавлении монет!");
+            Coins = int.MaxValue;
+        }
     }
 
     public bool TrySpendCoins(int amount)
     {
-        if (Coins < amount) return false;
-
         Coins -= amount;
-        OnCoinsChanged?.Invoke(Coins);
         return true;
     }
     
     private void Save()
     {
-        PlayerPrefs.SetInt("Coins", Coins);
+        PlayerPrefs.SetInt(COINS_KEY, Coins);
         PlayerPrefs.Save();
     }
 
     private void Load()
     {
-        Coins = PlayerPrefs.GetInt("Coins", 0);
+        _coins = PlayerPrefs.GetInt(COINS_KEY, 0);
+        OnCoinsChanged?.Invoke(_coins); // Уведомляем подписчиков
     }
-    
 }

@@ -897,13 +897,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc75f566ee5b89140ba38ac82e86d0dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1706483032}
-  smoothSpeed: 5
-  offset: {x: 1, y: 0, z: -10}
-  minSize: 6
-  maxSize: 12
-  maxSpeed: 15
-  zoomSmoothness: 5
+  _target: {fileID: 1706483032}
+  _settings:
+    smoothSpeed: 5
+    offset: {x: 3, y: 0, z: -10}
+    minSize: 5
+    maxSize: 10
+    maxSpeed: 15
+    zoomSmoothness: 5
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1807,8 +1808,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 1770108091}
-  grassTile: {fileID: 11400000, guid: fd54a7885f7661446aff1afdfc04dd77, type: 2}
-  dirtTile: {fileID: 11400000, guid: 34116b25e8c1d1e4d99118dcf8f39d03, type: 2}
   target: {fileID: 1706483032}
   viewDistance: 30
   groundHeightY: -3
@@ -1875,9 +1874,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b806ae838a75075498481064f941f5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgroundRenderer: {fileID: 1472719327}
-  cloudPrefab: {fileID: 5187451644673109083, guid: af93d21dfdda5af468f752c6e1e46bb7, type: 3}
-  cloudContainer: {fileID: 2045434239}
+  _cloudSpawnRate: 2
+  _cloudHeightRange: {x: 2, y: 15}
+  _cloudSpeedRange: {x: 1, y: 7}
+  _cloudScaleRange: {x: 0.5, y: 1.5}
+  _backgroundRenderer: {fileID: 1472719327}
+  _cloudPrefab: {fileID: 5187451644673109083, guid: af93d21dfdda5af468f752c6e1e46bb7, type: 3}
+  _cloudContainer: {fileID: 2045434239}
+  _cloudSprites:
+  - {fileID: 7622653437911558888, guid: 0a31e4730e98a5a4786ce0a2bd8a5602, type: 3}
 --- !u!1 &1168052440
 GameObject:
   m_ObjectHideFlags: 0

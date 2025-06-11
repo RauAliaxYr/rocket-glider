@@ -5,23 +5,35 @@ public class CoinsUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text coinsText;
 
-    void Start()
-    {
-        UpdateCoins(CurrencyManager.Instance.Coins);
-    }
-
     private void OnEnable()
     {
-        CurrencyManager.OnCoinsChanged += UpdateCoins;
+        ValidateReferences();
+        UpdateCoinsDisplay(CurrencyManager.Instance.Coins);
+        CurrencyManager.OnCoinsChanged += UpdateCoinsDisplay;
     }
 
     private void OnDisable()
     {
-        CurrencyManager.OnCoinsChanged -= UpdateCoins;
+        CurrencyManager.OnCoinsChanged -= UpdateCoinsDisplay;
     }
 
-    private void UpdateCoins(int coins)
+    private void ValidateReferences()
     {
-        coinsText.text = coins.ToString();
+        if (!coinsText)
+        {
+            Debug.LogError("Coins Text reference is missing!", this);
+            enabled = false;
+        }
+
+        if (!CurrencyManager.Instance)
+        {
+            Debug.LogError("CurrencyManager instance is missing!", this);
+            enabled = false;
+        }
+    }
+
+    private void UpdateCoinsDisplay(int newCoins)
+    {
+        coinsText.text = newCoins.ToString();
     }
 }
