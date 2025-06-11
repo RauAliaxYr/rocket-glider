@@ -32,7 +32,7 @@ public class LevelManager : MonoBehaviour
     #region Initialization
     private void InitializeSingleton()
     {
-        if (Instance != null && Instance != this)
+        if (Instance && Instance != this)
         {
             Destroy(gameObject);
             return;
@@ -50,7 +50,7 @@ public class LevelManager : MonoBehaviour
 
     private void PlayLevelMusic()
     {
-        if (_levelMusic != null && AudioManager.Instance != null)
+        if (_levelMusic && AudioManager.Instance)
         {
             AudioManager.Instance.PlayMusic(_levelMusic);
         }
