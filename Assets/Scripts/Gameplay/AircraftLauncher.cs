@@ -1,144 +1,222 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class AircraftLauncher : MonoBehaviour
 {
-   [SerializeField] private Rigidbody2D rb;
-   [SerializeField] private FlightTracker tracker;
+    [Header("Components")]
+    [SerializeField] private Rigidbody2D _rb;
+    [SerializeField] private FlightTracker _tracker;
+    [SerializeField] private LineRenderer _lineRenderer;
+
+    [Header("Launch Settings")]
+    [SerializeField] private float _maxDragLength = 3f;
     
-    private Vector2 startPoint;
-    private Vector2 endPoint;
-    private bool isDragging = false;
-    private bool hasLaunched = false;
-    private Vector2 startPosition;
-    
-    [Header("Визуализация силы")]
-    [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private float maxLineLength = 3f;
-    [SerializeField] private Color lineStartColor = Color.green;
-    [SerializeField] private Color lineEndColor = Color.red;
-    
+
+    [Header("Line Colors")]
+    [SerializeField] private Color _lineStartColor = Color.green;
+    [SerializeField] private Color _lineEndColor = Color.red;
+    [SerializeField] private float _lineStartWidth = 0.1f;
+    [SerializeField] private float _lineEndWidth = 0.5f;
+
+    private Vector2 _startPosition;
+    private bool _isDragging = false;
+    private bool _hasLaunched = false;
+    private Camera _mainCamera;
+
     public event Action OnLaunch;
 
-    void Start()
+    private void Awake()
     {
-        startPosition = transform.position;
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        
-        if (lineRenderer != null)
-        {
-            lineRenderer.positionCount = 2;
-            lineRenderer.startWidth = 0.1f;
-            lineRenderer.endWidth = 0.5f;
-            lineRenderer.enabled = false;
-        }
+        _startPosition = transform.position;
+        InitializeComponents();
+        SetupLineRenderer();
     }
 
-    void Update()
+    private void Start()
     {
-        if (!hasLaunched)
+        ResetToStart();
+    }
+
+    private void Update()
+    {
+        if (_hasLaunched) return;
+
+        HandleInput();
+    }
+
+    #region Initialization
+    private void InitializeComponents()
+    {
+        _mainCamera = Camera.main;
+        
+        if (!_rb) 
+            _rb = GetComponent<Rigidbody2D>();
+
+        if (!_mainCamera)
+            Debug.LogError("Main camera not found!", this);
+    }
+
+    private void SetupLineRenderer()
+    {
+        if (_lineRenderer)
         {
+            _lineRenderer.positionCount = 2;
+            _lineRenderer.startWidth = _lineStartWidth;
+            _lineRenderer.endWidth = _lineEndWidth;
+            _lineRenderer.enabled = false;
+        }
+    }
+    #endregion
+
+    #region Input Handling
+    private void HandleInput()
+    {
 #if UNITY_EDITOR || UNITY_STANDALONE
-            if (Input.GetMouseButtonDown(0))
-            {
-                startPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                isDragging = true;
-            }
-            else if (Input.GetMouseButton(0) && isDragging)
-            {
-                endPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                UpdateDragVisualization();
-            }
-            else if (Input.GetMouseButtonUp(0) && isDragging)
-            {
-                endPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Launch();
-                HideDragVisualization();
-            }
+        HandleMouseInput();
 #elif UNITY_ANDROID || UNITY_IOS
-            if (Input.touchCount > 0)
-            {
-                Touch touch = Input.GetTouch(0);
-                Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
-                
-                if (touch.phase == TouchPhase.Began)
-                {
-                    startPoint = touchPos;
-                    isDragging = true;
-                }
-                else if (touch.phase == TouchPhase.Moved && isDragging)
-                {
-                    endPoint = touchPos;
-                    UpdateDragVisualization();
-                }
-                else if (touch.phase == TouchPhase.Ended && isDragging)
-                {
-                    endPoint = touchPos;
-                    Launch();
-                    HideDragVisualization();
-                }
-            }
+        HandleTouchInput();
 #endif
+    }
+
+    private void HandleMouseInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            StartDrag(GetWorldPoint(Input.mousePosition));
+        }
+        else if (Input.GetMouseButton(0) && _isDragging)
+        {
+            ContinueDrag(GetWorldPoint(Input.mousePosition));
+        }
+        else if (Input.GetMouseButtonUp(0) && _isDragging)
+        {
+            EndDrag(GetWorldPoint(Input.mousePosition));
         }
     }
 
-    void Launch()
+    private void HandleTouchInput()
     {
-        if (!rb) return;
-        if (lineRenderer)
+        if (Input.touchCount == 0) return;
+
+        Touch touch = Input.GetTouch(0);
+        Vector2 touchPos = GetWorldPoint(touch.position);
+
+        switch (touch.phase)
         {
-            lineRenderer.enabled = false;
+            case TouchPhase.Began:
+                StartDrag(touchPos);
+                break;
+            case TouchPhase.Moved:
+                ContinueDrag(touchPos);
+                break;
+            case TouchPhase.Ended:
+                EndDrag(touchPos);
+                break;
         }
+    }
+
+    private Vector2 GetWorldPoint(Vector2 screenPoint)
+    {
+        return _mainCamera.ScreenToWorldPoint(screenPoint);
+    }
+    #endregion
+
+    #region Drag Logic
+    private void StartDrag(Vector2 startPoint)
+    {
+        _isDragging = true;
+        UpdateDragVisualization(startPoint, startPoint);
+    }
+
+    private void ContinueDrag(Vector2 currentPoint)
+    {
+        if (!_isDragging) return;
+        UpdateDragVisualization(_startPosition, currentPoint);
+    }
+
+    private void EndDrag(Vector2 endPoint)
+    {
+        if (!_isDragging) return;
         
-        Vector2 direction = startPoint - endPoint;
-        rb.bodyType = RigidbodyType2D.Dynamic;
-        Vector2 clampedDirection = Vector2.ClampMagnitude(direction, 3);
-        rb.AddForce(clampedDirection * UpgradeManager.Instance.GetLaunchForce(), ForceMode2D.Impulse);
-        hasLaunched = true;
-        isDragging = false;
-        
+        Launch(_startPosition, endPoint);
+        HideDragVisualization();
+        _isDragging = false;
+    }
+    #endregion
+
+    #region Launch Logic
+    private void Launch(Vector2 startPoint, Vector2 endPoint)
+    {
+        if (!_rb) return;
+
+        Vector2 direction = CalculateLaunchDirection(startPoint, endPoint);
+        float force = UpgradeManager.Instance.GetLaunchForce();
+
+        ApplyLaunchPhysics(direction, force);
+        _hasLaunched = true;
+
         OnLaunch?.Invoke();
     }
 
-    public void ResetToStart()
+    private Vector2 CalculateLaunchDirection(Vector2 startPoint, Vector2 endPoint)
     {
-        transform.position = startPosition;
-        rb.linearVelocity = Vector2.zero;
-        rb.angularVelocity = 0f;
-        transform.rotation = Quaternion.identity;
-        hasLaunched = false;
-        isDragging = false;
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        rb.simulated = true;
-    }
-    
-    void UpdateDragVisualization()
-    {
-        if (lineRenderer == null) return;
-    
         Vector2 direction = startPoint - endPoint;
-        Vector2 clampedDirection = Vector2.ClampMagnitude(direction, maxLineLength);
-        Vector2 endVisualPoint = (Vector2)transform.position + clampedDirection;
-    
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, endVisualPoint);
-    
-        // Изменение цвета в зависимости от силы
-        float strength = clampedDirection.magnitude / maxLineLength;
-        lineRenderer.startColor = Color.Lerp(lineStartColor, lineEndColor, strength);
-        lineRenderer.endColor = Color.Lerp(lineStartColor, lineEndColor, strength);
-    
-        if (!lineRenderer.enabled)
-        {
-            lineRenderer.enabled = true;
-        }
+        return Vector2.ClampMagnitude(direction, _maxDragLength);
     }
 
-    void HideDragVisualization()
+    private void ApplyLaunchPhysics(Vector2 direction, float force)
     {
-        if (lineRenderer != null)
+        _rb.bodyType = RigidbodyType2D.Dynamic;
+        _rb.AddForce(direction * force, ForceMode2D.Impulse);
+    }
+    #endregion
+
+    #region Visualization
+    private void UpdateDragVisualization(Vector2 startPoint, Vector2 endPoint)
+    {
+        if (!_lineRenderer) return;
+
+        Vector2 direction = CalculateLaunchDirection(startPoint, endPoint);
+        Vector2 endVisualPoint = (Vector2)transform.position + direction;
+
+        _lineRenderer.SetPosition(0, transform.position);
+        _lineRenderer.SetPosition(1, endVisualPoint);
+
+        UpdateLineColor(direction.magnitude / _maxDragLength);
+        _lineRenderer.enabled = true;
+    }
+
+    private void UpdateLineColor(float strength)
+    {
+        _lineRenderer.startColor = Color.Lerp(_lineStartColor, _lineEndColor, strength);
+        _lineRenderer.endColor = Color.Lerp(_lineStartColor, _lineEndColor, strength);
+    }
+
+    private void HideDragVisualization()
+    {
+        if (_lineRenderer)
         {
-            lineRenderer.enabled = false;
+            _lineRenderer.enabled = false;
         }
     }
+    #endregion
+
+    #region Reset
+    public void ResetToStart()
+    {
+        if (_rb)
+        {
+            _rb.bodyType = RigidbodyType2D.Kinematic;
+            _rb.linearVelocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
+            _rb.simulated = true;
+        }
+
+        transform.position = _startPosition;
+        transform.rotation = Quaternion.identity;
+        _hasLaunched = false;
+        _isDragging = false;
+    }
+    #endregion
 }

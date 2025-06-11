@@ -73,7 +73,7 @@ public class AircraftCrashHandler : MonoBehaviour
     {
         if (_rewardBannerUI && _tracker)
         {
-            int reward = _tracker.TakeCoindByTravel();
+            int reward = _tracker.CalculateAndAddCoins();
             _rewardBannerUI.Show(reward);
         }
     }
