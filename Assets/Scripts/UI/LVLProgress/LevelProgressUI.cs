@@ -21,7 +21,7 @@ public class LevelProgressUI : MonoBehaviour
     {
         if (!flightTracker || distanceToPass <= 0f) return;
 
-        float progress = Mathf.Clamp01(flightTracker.distanceTravelled / distanceToPass);
+        float progress = Mathf.Clamp01(flightTracker.DistanceTravelled / distanceToPass);
         progressFillImage.fillAmount = progress;
     }
     private void OnDisable()

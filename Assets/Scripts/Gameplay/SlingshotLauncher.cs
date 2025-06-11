@@ -149,7 +149,7 @@ public class SlingshotLauncher : MonoBehaviour
     {
         rb.simulated = false; // Отключаем физику
         audioSourceEngine.Stop();
-        rewardBannerUI.Show(tracker.TakeCoindByTravel());
+        rewardBannerUI.Show(tracker.CalculateAndAddCoins());
     }
     void MaintainTargetSpeed()
     {
