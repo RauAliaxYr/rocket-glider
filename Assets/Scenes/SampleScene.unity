@@ -1146,11 +1146,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf216a9540c52a4eafa682a08a076f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upgradesParent: {fileID: 649227308}
-  upgradeItemPrefab: {fileID: 1597956970077252629, guid: 1eb25a84d733b40418bf2133443d0ae4, type: 3}
-  plane: {fileID: 1706483040}
-  canvasGroup: {fileID: 28465083}
-  restartButton: {fileID: 126587666}
+  _upgradesParent: {fileID: 649227308}
+  _upgradeItemPrefab: {fileID: 1597956970077252629, guid: 1eb25a84d733b40418bf2133443d0ae4, type: 3}
+  _canvasGroup: {fileID: 28465083}
+  _upgradeSystem: {fileID: 1131610927}
+  _resetButton: {fileID: 126587666}
+  _fadeDuration: 0.5
+  _plane: {fileID: 1706483040}
 --- !u!1 &901723364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1752,8 +1754,8 @@ GameObject:
   - component: {fileID: 1131610922}
   - component: {fileID: 1131610925}
   - component: {fileID: 1131610923}
-  - component: {fileID: 1131610924}
   - component: {fileID: 1131610926}
+  - component: {fileID: 1131610927}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -1835,21 +1837,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c494e1b7b61ee35419d8de384230848d, type: 2}
   - {fileID: 11400000, guid: 025ee8e5ea4aa324c9db14588c565d92, type: 2}
   _levelMusic: {fileID: 8300000, guid: 946eebe4595b4e04bae57a5c0dd9ae61, type: 3}
---- !u!114 &1131610924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131610919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee1a8121c91c3454b96a8890754a6554, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speedConfig: {fileID: 11400000, guid: af12ea52810e3154dbf3fbc52aab5455, type: 2}
-  launchConfig: {fileID: 11400000, guid: f8a36f97fb794774f9908cbca1fbbc41, type: 2}
-  tapConfig: {fileID: 11400000, guid: 046fa6ef09de52247ada03259a9e1476, type: 2}
 --- !u!114 &1131610925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1883,6 +1870,28 @@ MonoBehaviour:
   _cloudContainer: {fileID: 2045434239}
   _cloudSprites:
   - {fileID: 7622653437911558888, guid: 0a31e4730e98a5a4786ce0a2bd8a5602, type: 3}
+--- !u!114 &1131610927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131610919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22dac13fba4d4905abf46238d8db09c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speedConfig: {fileID: 11400000, guid: af12ea52810e3154dbf3fbc52aab5455, type: 2}
+  _launchConfig: {fileID: 11400000, guid: f8a36f97fb794774f9908cbca1fbbc41, type: 2}
+  _tapConfig: {fileID: 11400000, guid: 046fa6ef09de52247ada03259a9e1476, type: 2}
+  _playerUpgrades:
+    speedLevel: 0
+    launchLevel: 0
+    tapLevel: 0
+    speedPurchases: 0
+    launchPurchases: 0
+    tapPurchases: 0
 --- !u!1 &1168052440
 GameObject:
   m_ObjectHideFlags: 0
@@ -2441,7 +2450,7 @@ MonoBehaviour:
   m_text: Play
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 518dc68de8353f645aab9834460080f5, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -3905645790145298276, guid: 518dc68de8353f645aab9834460080f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -87,6 +87,6 @@ public class RewardBannerUI : MonoBehaviour
 
         gameObject.SetActive(false);
         
-        upgradeUI.Show();
+        upgradeUI.ShowUI();
     }
 }

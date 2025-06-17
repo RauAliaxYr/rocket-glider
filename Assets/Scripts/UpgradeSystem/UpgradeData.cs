@@ -1,50 +1,94 @@
 using UnityEngine;
 
+[System.Serializable]
 public class UpgradeData
 {
-    public int speedLevel = 0;
-    public int launchLevel = 0;
-    public int tapLevel = 0;
+    private const string SPEED_KEY = "SpeedLevel";
+    private const string LAUNCH_KEY = "LaunchLevel";
+    private const string TAP_KEY = "TapLevel";
+    private const string SPEED_PURCHASES_KEY = "SpeedPurchases";
+    private const string LAUNCH_PURCHASES_KEY = "LaunchPurchases";
+    private const string TAP_PURCHASES_KEY = "TapPurchases";
+    
+    public const int BASE_PURCHASES_PER_LEVEL = 3;
 
-    public int speedPurchases = 0;
-    public int launchPurchases = 0;
-    public int tapPurchases = 0;
+    [Header("Current Levels")]
+    public int speedLevel;
+    public int launchLevel;
+    public int tapLevel;
 
-    private int purchasesPerLevel = 3;
+    [Header("Current Purchases")]
+    public int speedPurchases;
+    public int launchPurchases;
+    public int tapPurchases;
 
     public int PlaneLevel => Mathf.Min(speedLevel, launchLevel, tapLevel) + 1;
 
-    public bool TryUpgrade(ref int purchases, ref int level)
+    public bool TryUpgrade(UpgradeType type)
     {
-        int requiredPurchases = purchasesPerLevel + level;
-
+        ref int level = ref GetLevelRef(type);
+        ref int purchases = ref GetPurchasesRef(type);
         purchases++;
-        if (purchases >= requiredPurchases)
+        Save();
+        
+        if (purchases >= BASE_PURCHASES_PER_LEVEL)
         {
-            purchases = 0;
             level++;
-            return true; // уровень апгрейда вырос
+            purchases = 0;
+            
+            return true;
         }
+
         return false;
     }
+
     public void Save()
     {
-        PlayerPrefs.SetInt("SpeedLevel", speedLevel);
-        PlayerPrefs.SetInt("LaunchLevel", launchLevel);
-        PlayerPrefs.SetInt("TapLevel", tapLevel);
-        PlayerPrefs.SetInt("SpeedLevelPurch", speedPurchases);
-        PlayerPrefs.SetInt("LaunchLevelPurch", launchPurchases);
-        PlayerPrefs.SetInt("TapLevelPurch", tapPurchases);
+        PlayerPrefs.SetInt(SPEED_KEY, speedLevel);
+        PlayerPrefs.SetInt(LAUNCH_KEY, launchLevel);
+        PlayerPrefs.SetInt(TAP_KEY, tapLevel);
+        PlayerPrefs.SetInt(SPEED_PURCHASES_KEY, speedPurchases);
+        PlayerPrefs.SetInt(LAUNCH_PURCHASES_KEY, launchPurchases);
+        PlayerPrefs.SetInt(TAP_PURCHASES_KEY, tapPurchases);
         PlayerPrefs.Save();
     }
 
     public void Load()
     {
-        speedLevel = PlayerPrefs.GetInt("SpeedLevel", 0);
-        launchLevel = PlayerPrefs.GetInt("LaunchLevel", 0);
-        tapLevel = PlayerPrefs.GetInt("TapLevel", 0);
-        speedPurchases=PlayerPrefs.GetInt("SpeedLevelPurch", 0);
-        launchPurchases=PlayerPrefs.GetInt("LaunchLevelPurch", 0);
-        tapPurchases=PlayerPrefs.GetInt("TapLevelPurch",0 );
+        speedLevel = PlayerPrefs.GetInt(SPEED_KEY, 0);
+        launchLevel = PlayerPrefs.GetInt(LAUNCH_KEY, 0);
+        tapLevel = PlayerPrefs.GetInt(TAP_KEY, 0);
+        speedPurchases = PlayerPrefs.GetInt(SPEED_PURCHASES_KEY, 0);
+        launchPurchases = PlayerPrefs.GetInt(LAUNCH_PURCHASES_KEY, 0);
+        tapPurchases = PlayerPrefs.GetInt(TAP_PURCHASES_KEY, 0);
+    }
+
+    private ref int GetLevelRef(UpgradeType type)
+    {
+        switch (type)
+        {
+            case UpgradeType.Speed: return ref speedLevel;
+            case UpgradeType.Launch: return ref launchLevel;
+            case UpgradeType.Tap: return ref tapLevel;
+            default: return ref speedLevel;
+        }
+    }
+
+    private ref int GetPurchasesRef(UpgradeType type)
+    {
+        switch (type)
+        {
+            case UpgradeType.Speed: return ref speedPurchases;
+            case UpgradeType.Launch: return ref launchPurchases;
+            case UpgradeType.Tap: return ref tapPurchases;
+            default: return ref speedPurchases;
+        }
+    }
+
+    public enum UpgradeType
+    {
+        Speed,
+        Launch,
+        Tap
     }
 }

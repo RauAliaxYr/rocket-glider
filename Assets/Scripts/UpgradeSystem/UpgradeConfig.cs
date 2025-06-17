@@ -3,29 +3,24 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Upgrades/Upgrade Config")]
 public class UpgradeConfig : ScriptableObject
 {
-    public string upgradeName;
-    public float[] valuesPerLevel;
-    public int[] costPerLevel;
+    [SerializeField] private string _upgradeName;
+    [SerializeField] private float[] _valuesPerLevel;
+    [SerializeField] private int[] _costPerLevel;
 
     public float GetValue(int level)
     {
-        if (valuesPerLevel == null || valuesPerLevel.Length == 0)
-            return 0f;
-        if (level < 0)
-            return valuesPerLevel[0];
-        if (level >= valuesPerLevel.Length)
-            return valuesPerLevel[^1];
-        return valuesPerLevel[level];
+        return GetLevelValue(_valuesPerLevel, level);
     }
-
     public int GetCost(int level)
     {
-        if (costPerLevel == null || costPerLevel.Length == 0)
-            return 0;
-        if (level < 0)
-            return costPerLevel[0];
-        if (level >= costPerLevel.Length)
-            return costPerLevel[^1];
-        return costPerLevel[level];
+        return GetLevelValue(_costPerLevel, level);
+    }
+
+    private T GetLevelValue<T>(T[] array, int level)
+    {
+        if (array == null || array.Length == 0)
+            return default;
+
+        return array[Mathf.Clamp(level, 0, array.Length - 1)];
     }
 }
