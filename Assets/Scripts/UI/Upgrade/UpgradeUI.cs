@@ -1,112 +1,95 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 
 public class UpgradeUI : MonoBehaviour
 {
-    public Transform upgradesParent;
-    public GameObject upgradeItemPrefab;
-    public AircraftController plane;
-    public CanvasGroup canvasGroup;
-    public Button restartButton;
+    [Header("UI References")]
+    [SerializeField] private Transform _upgradesParent;
+    [SerializeField] private GameObject _upgradeItemPrefab;
+    [SerializeField] private CanvasGroup _canvasGroup;
+    [SerializeField] private UpgradeManager _upgradeManager;
+    [SerializeField] private Button _resetButton;
     
-    private float fadeDuration = 0.5f;
-
+    [Header("Animation")]
+    [SerializeField] private float _fadeDuration = 0.5f;
+    
+    [Header("Plane")]
+    [SerializeField] private AircraftController _plane;
+    
+    
     private void Awake()
     {
-        restartButton.onClick.AddListener(RestartGame);
+        _resetButton.onClick.AddListener(RestartGame);
     }
-    public void RefreshUI()
+    public void ShowUI()
     {
-        upgradesParent.gameObject.SetActive(true);
-        foreach (Transform child in upgradesParent)
+        gameObject.SetActive(true);
+        StartCoroutine(FadeAnimation(0f, 1f));
+        RefreshAllUpgrades();
+    }
+
+    public void HideUI()
+    {
+        StartCoroutine(FadeAnimation(1f, 0f, () => gameObject.SetActive(false)));
+    }
+
+    public void RefreshAllUpgrades()
+    {
+        ClearUpgradeItems();
+        
+        foreach (var type in System.Enum.GetValues(typeof(UpgradeData.UpgradeType)))
+        {
+            CreateUpgradeItem((UpgradeData.UpgradeType)type);
+        }
+    }
+
+    private void CreateUpgradeItem(UpgradeData.UpgradeType type)
+    {
+        var item = Instantiate(_upgradeItemPrefab, _upgradesParent);
+        if (item.TryGetComponent(out UpgradeItemUI ui))
+        {
+            var data = _upgradeManager.GetUpgradeData(type);
+            ui.Setup(
+                _upgradeManager.GetUpgradeName(type),
+                data.currentLevel,
+                _upgradeManager.GetUpgradeCost(type),
+                _upgradeManager.CanUpgrade(type),
+                () => _upgradeManager.TryUpgrade(type),
+                data.currentPurchases,
+                _upgradeManager.GetRequiredPurchases(type) // Максимум покупок для уровня
+            );
+        }
+    }
+
+    private void ClearUpgradeItems()
+    {
+        foreach (Transform child in _upgradesParent)
         {
             Destroy(child.gameObject);
         }
-        CreateUI();
     }
 
-    void CreateUpgradeItem(string name, UpgradeConfig config, int level, System.Action onUpgrade, int purchases, int maxPurchase)
+    private IEnumerator FadeAnimation(float from, float to, System.Action onComplete = null)
     {
-        var item = Instantiate(upgradeItemPrefab, upgradesParent);
-        var ui = item.GetComponent<UpgradeItemUI>();
-
-        int cost = config.GetCost(level);
-        bool canUpgrade = CurrencyManager.Instance.Coins >= cost;
-        int innerProgress = purchases;
-        int progressMax = maxPurchase; 
-
-        ui.Setup(name, level, cost, canUpgrade, () =>
-        {
-            onUpgrade?.Invoke();
-            RefreshUI();
-        },innerProgress,progressMax);
-    }
-    public void Show()
-    {
-        gameObject.SetActive(true);
-        StartCoroutine(ShowRoutine());
-        RefreshUI(); // обновление информации об улучшениях
-    }
-
-    private IEnumerator ShowRoutine()
-    {
-        // Плавное появление
         float elapsed = 0f;
-        while (elapsed < fadeDuration)
+        while (elapsed < _fadeDuration)
         {
+            _canvasGroup.alpha = Mathf.Lerp(from, to, elapsed / _fadeDuration);
             elapsed += Time.unscaledDeltaTime;
-            canvasGroup.alpha = Mathf.Lerp(0, 1, elapsed / fadeDuration);
             yield return null;
         }
-
-        canvasGroup.alpha = 1f;
+        
+        _canvasGroup.alpha = to;
+        onComplete?.Invoke();
     }
-
     private void RestartGame()
     {
-        Time.timeScale = 1f; // Возвращаем время
-        StartCoroutine(ResetGameState());
-    }
-    private IEnumerator ResetGameState()
-    {
-        // Скрываем баннер
-        float elapsed = 0f;
-        float fadeDuration = 0.5f;
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            canvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
-            yield return null;
-        }
-
-        gameObject.SetActive(false);
-        plane.ResetAircraft();// Сбрасываем самолёт
-        
-        if (LevelManager.Instance.IsLevelReadyToAdvance)
-        {
-            LevelManager.Instance.ConfirmAdvanceLevel();
-        }
-    }
-
-    private void CreateUI()
-    {
-        UpgradeManager manager = UpgradeManager.Instance;
-        
-        CreateUpgradeItem("Speed", manager.speedConfig, 
-            manager.playerUpgrades.speedLevel,
-            () => manager.TryUpgradeSpeed(),manager.playerUpgrades.speedPurchases,manager.playerUpgrades.speedLevel+3);
-
-        CreateUpgradeItem("Launch", manager.launchConfig, 
-            manager.playerUpgrades.launchLevel,
-            () => manager.TryUpgradeLaunchForce(),manager.playerUpgrades.launchPurchases,manager.playerUpgrades.launchLevel+3);
-
-        CreateUpgradeItem("Tap", manager.tapConfig, 
-            manager.playerUpgrades.tapLevel,
-            () => manager.TryUpgradeTapForce(),manager.playerUpgrades.tapPurchases,manager.playerUpgrades.tapLevel+3);
-        
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)upgradesParent);
+        HideUI();
+        Time.timeScale = 1f;
+        _plane.ResetAircraft();
     }
 }
+

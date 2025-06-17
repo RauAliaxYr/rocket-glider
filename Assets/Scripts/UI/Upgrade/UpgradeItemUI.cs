@@ -4,31 +4,44 @@ using UnityEngine.UI;
 
 public class UpgradeItemUI : MonoBehaviour
 {
-    public TextMeshProUGUI upgradeNameText;
-    public TextMeshProUGUI levelText;
-    public TextMeshProUGUI costText;
-    public Button upgradeButton;
-    public Image progressFillImage;
-    public TextMeshProUGUI progressText;
+    [Header("Text Components")]
+    [SerializeField] private TextMeshProUGUI _upgradeNameText;
+    [SerializeField] private TextMeshProUGUI _levelText;
+    [SerializeField] private TextMeshProUGUI _costText;
+    [SerializeField] private TextMeshProUGUI _progressText;
 
-    private System.Action onUpgradeClick;
+    [Header("UI Elements")]
+    [SerializeField] private Button _upgradeButton;
+    [SerializeField] private Image _progressFillImage;
 
-    public void Setup(string name, int level, int cost, bool canUpgrade, System.Action onClick,int progressValue, int progressMax)
+    private System.Action _onUpgradeCallback;
+
+    public void Setup(
+        string upgradeName,
+        int currentLevel,
+        int cost,
+        bool canUpgrade,
+        System.Action onUpgrade,
+        int purchasesCompleted,
+        int purchasesRequired
+    )
     {
-        upgradeNameText.text = name;
-        levelText.text = $"Level: {level}";
-        costText.text = $"Cost: {cost}";
-        upgradeButton.interactable = canUpgrade;
-        onUpgradeClick = onClick;
+        // Установка текстовых полей
+        _upgradeNameText.text = upgradeName;
+        _levelText.text = $"Level: {currentLevel}";
+        _costText.text = $"Cost: {cost}"; // Новый метод
+        _upgradeButton.interactable = canUpgrade;
+        _onUpgradeCallback = onUpgrade;
 
-        upgradeButton.onClick.RemoveAllListeners();
-        upgradeButton.onClick.AddListener(() => onUpgradeClick?.Invoke());
-        // Обновление прогресса
-        // Прогресс визуально
-        if (progressFillImage)
-            progressFillImage.fillAmount = Mathf.Clamp01((float)progressValue / progressMax);
-
-        if (progressText)
-            progressText.text = $"{progressValue} / {progressMax}";;
+        // Коллбэк
+        _upgradeButton.onClick.RemoveAllListeners();
+        _upgradeButton.onClick.AddListener(() => _onUpgradeCallback?.Invoke());
+        if (_progressFillImage)
+        {
+            _progressFillImage.fillAmount = Mathf.Clamp01((float)purchasesCompleted / purchasesRequired);
+        }
+        if (_progressText)
+            _progressText.text = $"{purchasesCompleted} / {purchasesRequired}";;
     }
+
 }

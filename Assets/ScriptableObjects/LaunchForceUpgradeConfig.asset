@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51f7d91fc0f0fef47b71a38641c84c9b, type: 3}
   m_Name: LaunchForceUpgradeConfig
   m_EditorClassIdentifier: 
-  upgradeName: 
-  valuesPerLevel:
+  _upgradeName: 
+  _valuesPerLevel:
   - 3
   - 4
   - 5
@@ -22,6 +22,4 @@ MonoBehaviour:
   - 8
   - 9
   - 10
-  - 11
-  - 12
-  costPerLevel: 030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
+  _costPerLevel: 0100000002000000030000000400000005000000060000000700000008000000

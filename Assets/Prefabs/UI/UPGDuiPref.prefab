@@ -91,12 +91,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719586434aa7bad44b3e2f2605fc0a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upgradeNameText: {fileID: 6178246846991278949}
-  levelText: {fileID: 6784952132038505546}
-  costText: {fileID: 5740578870710652065}
-  upgradeButton: {fileID: 6257791702486170816}
-  progressFillImage: {fileID: 8556066828244061533}
-  progressText: {fileID: 966845307120663150}
+  _upgradeNameText: {fileID: 6178246846991278949}
+  _levelText: {fileID: 6784952132038505546}
+  _valueText: {fileID: 2424157775606816835}
+  _costText: {fileID: 5740578870710652065}
+  _progressText: {fileID: 966845307120663150}
+  _upgradeButton: {fileID: 6257791702486170816}
+  _progressFillImage: {fileID: 8556066828244061533}
+  _maxLevelIndicator: {fileID: 4774595860566020141}
 --- !u!1 &3501225948464359026
 GameObject:
   m_ObjectHideFlags: 0

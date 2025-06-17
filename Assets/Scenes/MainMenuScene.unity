@@ -223,12 +223,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9b7c413ff19d64bb7ba122e3fe32f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  studioLogoImage: {fileID: 253322681}
-  logoCanavas: {fileID: 2081316211}
-  mainMenuRoot: {fileID: 515465145}
-  logoFadeDuration: 1.5
-  logoDisplayDuration: 1.5
-  musicMenu: {fileID: 8300000, guid: e4c062c73646b064d98a52fdcad6a69d, type: 3}
+  _studioLogoImage: {fileID: 253322681}
+  _logoCanvas: {fileID: 2081316211}
+  _logoFadeInDuration: 1.5
+  _logoDisplayDuration: 1.5
+  _logoFadeOutDuration: 0.8
+  _mainMenuRoot: {fileID: 515465145}
+  _targetSceneName: SampleScene
+  _menuMusic: {fileID: 8300000, guid: e4c062c73646b064d98a52fdcad6a69d, type: 3}
 --- !u!4 &385197667
 Transform:
   m_ObjectHideFlags: 0
@@ -1217,8 +1219,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2000, y: 5000}
+  m_AnchoredPosition: {x: 124.33, y: -6.91}
+  m_SizeDelta: {x: 6020.01, y: 5020.72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2134263448
 MonoBehaviour:

@@ -52,8 +52,15 @@ public class CurrencyManager: MonoBehaviour
 
     public bool TrySpendCoins(int amount)
     {
+        if (!CanSpendCoins(amount)) return false;
+        
         Coins -= amount;
         return true;
+    }
+
+    public bool CanSpendCoins(int amount)
+    {
+        return (Coins - amount >= 0);
     }
     
     private void Save()
